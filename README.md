@@ -10,7 +10,7 @@ Este projeto foi desenvolvido como parte da disciplina de **Sistemas Operacionai
 - Exibição das ações de Yoda, Padawans e espectadores no console.
 - Evita impasses (deadlocks) e inanição (starvation) nas operações concorrentes.
 
-## Colaboradores:
+## Grupo:
 - Matheus Vinicius Costa
 - Raquel de Oliveira
 - Matheus Fontes Pessoa de Mello

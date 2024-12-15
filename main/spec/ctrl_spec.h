@@ -6,8 +6,8 @@
 #include <stdio.h>
 
 // Funções relacionadas ao comportamento dos espectadores
-void entra_salao(const char* nome);
-void assiste_testes(const char* nome);
-void sai_salao(const char* nome);
+void entra_salao(int id,const char* nome);
+void assiste_testes(int id,const char* nome);
+void sai_salao(int id,const char* nome);
 
 #endif // CTRL_SPEC_H

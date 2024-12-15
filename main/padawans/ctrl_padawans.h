@@ -6,12 +6,12 @@
 #include <stdio.h>
 
 // Funções relacionadas ao comportamento do Padawan
-void entra_salao(const char* nome);
-void cumprimenta_mestres_avaliadores(const char* nome);
-void aguarda_avaliacao(const char* nome);
-void realiza_avaliacao(const char* nome);
-void aguarda_corte_tranca(const char* nome);
-void cumprimenta_Yoda(const char* nome);
-void sai_salao(const char* nome);
+void entra_salao(int id,const char* nome);
+void cumprimenta_mestres_avaliadores(int id,const char* nome);
+void aguarda_avaliacao(int id,const char* nome);
+void realiza_avaliacao(int id,const char* nome);
+void aguarda_corte_tranca(int id,const char* nome);
+void cumprimenta_Yoda(int id,const char* nome);
+void sai_salao(int id,const char* nome);
 
 #endif // CTRL_PADAWAN_H

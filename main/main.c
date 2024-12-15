@@ -4,10 +4,10 @@
 #include <time.h>
 #include <pthread.h>
 #include <unistd.h>
-#include "ctrl_yoda.h"
-#include "ctrl_padawan.h"
-#include "ctrl_spec.h"
-#include "ctrl_semaforo.h"
+#include "yoda/ctrl_yoda.h"
+#include "padawans/ctrl_padawan.h"
+#include "spec/ctrl_spec.h"
+#include "utils/ctrl_semaforo.h"
 
 // Constantes
 #define MESTRES_AVALIADORES 4

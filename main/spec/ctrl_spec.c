@@ -24,7 +24,7 @@ void destroy_spec_resources() {
 }
 
 // Função para entrar no salão
-void entra_salao(const char *nome) {
+void entra_salao(int id,const char *nome) {
     sem_wait(&salao_mutex);
     pessoas_no_salao++;
     printf("%s entrou no salão. Total no salão: %d\n", nome, pessoas_no_salao);
@@ -32,14 +32,14 @@ void entra_salao(const char *nome) {
 }
 
 // Função para assistir os testes
-void assiste_testes(const char *nome) {
+void assiste_testes(int id,const char *nome) {
     printf("%s está assistindo aos testes.\n", nome);
     sem_wait(&teste_semaforo);
     // Simulação de assistir os testes (pode ser um sleep ou operação específica)
 }
 
 // Função para sair do salão
-void sai_salao(const char *nome) {
+void sai_salao(int id,const char *nome) {
     sem_wait(&salao_mutex);
     pessoas_no_salao--;
     printf("%s saiu do salão. Total no salão: %d\n", nome, pessoas_no_salao);

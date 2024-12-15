@@ -6,12 +6,10 @@ Este projeto foi desenvolvido como parte da disciplina de **Sistemas Operacionai
 
 ## Funcionalidades
 - Controle da entrada e saída de Padawans e espectadores no salão de testes.
-- Utilização de semáforos e mutexes para sincronização das threads.
+- Utilização de semáforos para sincronização das threads.
 - Exibição das ações de Yoda, Padawans e espectadores no console.
-- Evita impasses (deadlocks) e inanição (starvation) nas operações concorrentes.
+- Evita impasses (Deadlocks) e inanição (Starvation) nas operações concorrentes.
 
 ## Grupo:
 - Matheus Vinicius Costa
-- Raquel de Oliveira
-- Matheus Fontes Pessoa de Mello
 - Lucas Dos Santos Vaz

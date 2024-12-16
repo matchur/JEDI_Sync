@@ -11,7 +11,7 @@
 #include "utils/ctrl_semaforo.h"
 
 // Constantes
-#define MESTRES_AVALIADORES 4
+#define MESTRES_AVALIADORES 4 // Não implementado
 #define MIN_PADAWANS 5
 #define MAX_PADAWANS 10
 #define MIN_ESPECTADORES 10
@@ -120,6 +120,7 @@ int main() {
     system("clear"); //limpa tela
 
     //Menu
+    printf("                                                                  \n");
     printf("     ██╗███████╗██████╗ ██╗    ███████╗██╗   ██╗███╗   ██╗ ██████╗\n");
     printf("     ██║██╔════╝██╔══██╗██║    ██╔════╝╚██╗ ██╔╝████╗  ██║██╔════╝\n");
     printf("     ██║█████╗  ██║  ██║██║    ███████╗ ╚████╔╝ ██╔██╗ ██║██║     \n");
@@ -127,6 +128,7 @@ int main() {
     printf("╚█████╔╝███████╗██████╔╝██║    ███████║   ██║   ██║ ╚████║╚██████╗\n");
     printf(" ╚════╝ ╚══════╝╚═════╝ ╚═╝    ╚══════╝   ╚═╝   ╚═╝  ╚═══╝ ╚═════╝\n");
     printf("                                                                  \n");
+    printf("---- Configuração da Cerimônia ----\n");
     printf("Quantidade de Padawans: %d\n", num_padawans);
     printf("Quantidade de Espectadores: %d\n", num_espectadores);
 

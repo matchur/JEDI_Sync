@@ -112,11 +112,11 @@ int main() {
     // Carregar arquivos de nomes e discursos
     load_names("utils/name_list.txt");
     load_speeches("utils/speak_list.txt");
-
-    do {
     // Gerar valores aleatórios iniciais
     num_padawans = rand() % (MAX_PADAWANS - MIN_PADAWANS + 1) + MIN_PADAWANS;
     num_espectadores = rand() % (MAX_ESPECTADORES - MIN_ESPECTADORES + 1) + MIN_ESPECTADORES;
+
+    do {
     system("clear"); //limpa tela
 
     //Menu
@@ -144,6 +144,8 @@ int main() {
     switch (escolha) {
         case 'R': // Randomizar novamente
             printf("Randomizando novamente...\n");
+            num_padawans = rand() % (MAX_PADAWANS - MIN_PADAWANS + 1) + MIN_PADAWANS;
+            num_espectadores = rand() % (MAX_ESPECTADORES - MIN_ESPECTADORES + 1) + MIN_ESPECTADORES;
             break;
 
         case 'M': // Inserir valores manualmente

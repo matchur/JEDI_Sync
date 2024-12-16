@@ -19,7 +19,7 @@ void libera_entrada() {
 
 void fecha_entrada() {
     printf("Yoda Trancou o salão.\n");
-    wait_post(&tranca_salao); // Libera a entrada no salão
+    sem_wait(&tranca_salao); // Libera a entrada no salão
 }
 
 void anuncia_resultado() {

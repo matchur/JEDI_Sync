@@ -1,5 +1,8 @@
 #include "ctrl_padawans.h"
 #include <unistd.h>
+#include <stdlib.h>  
+#include <time.h>    
+
 // Semáforos compartilhados para controle
 extern sem_t tranca_salao;
 extern sem_t capacidade_testes; // <-  Talvez tirar esse extern
@@ -33,8 +36,14 @@ void realiza_avaliacao(int id,const char* nome) {
 
 void aguarda_corte_tranca(int id,const char* nome) {
     printf("%s - (%d) está aguardando que Yoda corte a tranca para sair do salão.\n", nome,id);
-    sem_wait(&tranca_salao); // Aguarda que o salão seja destrancado novamente
-    printf("%s - (%d) pode sair do salão.\n", nome,  id);
+    //sem_wait(&tranca_salao); // Aguarda que o salão seja destrancado novamente
+    srand(time(NULL));
+    int x = rand() % 2;
+    sleep(3);
+    if(x)
+        printf("%s - (%d) Sua trança foi cortada. pode sair do salão.\n", nome,  id);
+    else
+        printf("%s - (%d) Sua trança não foi cortada. pode sair do salão.\n", nome,  id);        
 }
 
 void cumprimenta_Yoda(int id,const char* nome) {

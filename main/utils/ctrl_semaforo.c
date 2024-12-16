@@ -12,7 +12,7 @@ sem_t capacidade_testes;
 void inicializa_semaforos(int max_espectadores, int max_padawans) {
     //TESTAR ISSO AQUI DEPOIS.....
     (void)max_padawans;
-    // Semáforo para controlar o acesso ao salão (fechado inicialmente)
+    // Semáforo para controlar o acesso ao salão (Starta fechado)
     if (sem_init(&tranca_salao, 0, 0) != 0) {
         perror("Erro ao inicializar semáforo: tranca_salao");
     }

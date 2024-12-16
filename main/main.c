@@ -122,6 +122,7 @@ int main() {
 
     // Yoda inicia os testes
     inicia_testes();
+    libera_entrada();
 
     // Cria threads para os Padawans
     for (int i = 0; i < num_padawans; i++) {
@@ -140,14 +141,13 @@ int main() {
         pthread_create(&espectador_threads[i], NULL, thread_espectador, data);
         usleep(rand() % 500000); // Simula chegada aleatória
     }
-
+        fecha_entrada();
     // Aguarda a finalização das threads dos Padawans
     for (int i = 0; i < num_padawans; i++) {
         pthread_join(padawan_threads[i], NULL);
     }
 
-    // Libera a entrada para espectadores saírem
-    libera_entrada();
+
     anuncia_resultado();
 
     // Aguarda a finalização das threads dos Espectadores

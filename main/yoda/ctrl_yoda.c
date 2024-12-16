@@ -17,6 +17,11 @@ void libera_entrada() {
     sem_post(&tranca_salao); // Libera a entrada no salão
 }
 
+void fecha_entrada() {
+    printf("Yoda Trancou o salão.\n");
+    wait_post(&tranca_salao); // Libera a entrada no salão
+}
+
 void anuncia_resultado() {
     printf("Yoda está anunciando os resultados dos testes.\n");
     // Simula o anúncio

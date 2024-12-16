@@ -2,7 +2,7 @@
 #include <unistd.h>
 // Semáforos compartilhados para controle
 extern sem_t tranca_salao;
-extern sem_t capacidade_testes;
+extern sem_t capacidade_testes; // <-  Talvez tirar esse extern
 
 void padawan_entra_salao(int id, const char* nome) {
     printf("%s - (%d) está aguardando para entrar no salão.\n", nome,id);
@@ -12,7 +12,7 @@ void padawan_entra_salao(int id, const char* nome) {
 
 void cumprimenta_mestres_avaliadores(int id,const char* nome) {
     printf("%s - (%d) está cumprimentando os mestres avaliadores.\n", nome,id);
-    // Simula o cumprimento
+    // Simula o cumprimento - Talvez colocar mais um semaforo aqui!!!!!!!!!!!!!!!!!!!
     sleep(1);
     printf("%s - (%d) concluiu o cumprimento aos mestres avaliadores.\n" , nome,id);
 }

@@ -32,6 +32,11 @@ void inicializa_semaforos(int max_espectadores, int max_padawans) {
         perror("Erro ao inicializar semáforo: corte_tranca");
     }
 
+    // Semáforo para capacidade de testes
+    if (sem_init(&capacidade_testes, 0, 1) != 0) {
+        perror("Erro ao inicializar semáforo: capacidade_testes");
+    }
+
     printf("Semáforos inicializados com sucesso.\n");
 }
 

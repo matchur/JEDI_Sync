@@ -3,23 +3,24 @@
 
 
 // Semáforos para gerenciar o salão e os testes
-extern sem_t tranca_salao;  // Tranca/Destranca o salão
+extern int tranca_salao;  // Tranca/Destranca o salão
 extern sem_t capacidade_testes; // Gerencia a capacidade de testes
+extern sem_t avaliacao_padawan;
 
-void inicia_testes() {
-    printf("Yoda está iniciando os testes no salão.\n");
-    sem_wait(&capacidade_testes); // Permite que os testes comecem
-    printf("Testes iniciados com sucesso.\n");
+void inicia_testes(int max_padawans) {
+    printf("Yoda sinaliza que avaliações comecem.\n");
+    for(int i=0;i<max_padawans;i++)
+        sem_post(&avaliacao_padawan);
 }
 
 void libera_entrada() {
     printf("Yoda liberou a entrada para o salão.\n");
-    sem_post(&tranca_salao); // Libera a entrada no salão
+    tranca_salao = 1; // abre o salão
 }
 
 void fecha_entrada() {
     printf("Yoda Trancou o salão.\n");
-    sem_wait(&tranca_salao); // Libera a entrada no salão
+    tranca_salao = 0; // fecha o salão
 }
 
 void anuncia_resultado() {
@@ -31,7 +32,7 @@ void anuncia_resultado() {
 
 void corta_tranca() {
     printf("Yoda está trancando o salão para novos testes.\n");
-    sem_wait(&tranca_salao); // Bloqueia a entrada no salão
+    //sem_wait(&tranca_salao); // Bloqueia a entrada no salão
     printf("Salão trancado.\n");
 }
 

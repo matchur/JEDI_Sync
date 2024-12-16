@@ -12,12 +12,18 @@
 
 // Constantes
 #define MESTRES_AVALIADORES 4 // Não implementado
+
+#define PLACE_PADAWANS 6
+#define PLACE_SPECS 15
+
 #define MIN_PADAWANS 5
 #define MAX_PADAWANS 10
 #define MIN_ESPECTADORES 10
 #define MAX_ESPECTADORES 20
 #define MAX_NAME_LENGTH 50
 #define MAX_DISCOURSE_LENGTH 500
+
+extern int count_avaliacao;
 
 // Lista dinâmica de nomes e discursos
 char** name_list = NULL;
@@ -182,14 +188,13 @@ int main() {
     } while (escolha != 'C');
 
     // Inicializa semáforos com os limites definidos
-    inicializa_semaforos(num_espectadores, num_padawans); // Máximo de espectadores e acesso de um Padawan por vez
+    inicializa_semaforos(PLACE_SPECS, PLACE_PADAWANS); // Máximo de espectadores e acesso de um Padawan por vez
 
     // Inicialização de threads
     pthread_t padawan_threads[num_padawans];
     pthread_t espectador_threads[num_espectadores];
 
-    // Yoda inicia os testes
-    inicia_testes();
+
     libera_entrada();
 
     // Cria threads para os Padawans
@@ -211,6 +216,9 @@ int main() {
         usleep(rand() % 500000); // Simula chegada aleatória
     }*/
     
+    // Yoda inicia os testes avaliativos
+    if(count_avaliacao >= PLACE_PADAWANS)
+    inicia_testes(PLACE_PADAWANS);
     
     // Aguarda a finalização das threads dos Padawans
     for (int i = 0; i < num_padawans; i++) {

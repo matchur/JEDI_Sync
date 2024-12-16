@@ -120,7 +120,13 @@ int main() {
     system("clear"); //limpa tela
 
     //Menu
-    printf("Uma nova avaliação JEDI se inicia!!!\n");
+    printf("     ██╗███████╗██████╗ ██╗    ███████╗██╗   ██╗███╗   ██╗ ██████╗\n");
+    printf("     ██║██╔════╝██╔══██╗██║    ██╔════╝╚██╗ ██╔╝████╗  ██║██╔════╝\n");
+    printf("     ██║█████╗  ██║  ██║██║    ███████╗ ╚████╔╝ ██╔██╗ ██║██║     \n");
+    printf("██   ██║██╔══╝  ██║  ██║██║    ╚════██║  ╚██╔╝  ██║╚██╗██║██║     \n");
+    printf("╚█████╔╝███████╗██████╔╝██║    ███████║   ██║   ██║ ╚████║╚██████╗\n");
+    printf(" ╚════╝ ╚══════╝╚═════╝ ╚═╝    ╚══════╝   ╚═╝   ╚═╝  ╚═══╝ ╚═════╝\n");
+    printf("                                                                  \n");
     printf("Quantidade de Padawans: %d\n", num_padawans);
     printf("Quantidade de Espectadores: %d\n", num_espectadores);
 

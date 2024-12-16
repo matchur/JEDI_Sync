@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <ctype.h>
 #include <string.h>
 #include <time.h>
 #include <pthread.h>
@@ -99,19 +100,76 @@ void* thread_espectador(void* arg) {
 
 // Função principal
 int main() {
+    //Variaveis Init
+    int num_padawans;
+    int num_espectadores;
+    char escolha;
+    
     srand(time(NULL)); // Inicializa o gerador de números aleatórios
+
+
 
     // Carregar arquivos de nomes e discursos
     load_names("utils/name_list.txt");
     load_speeches("utils/speak_list.txt");
 
-    // Inicialização de variáveis
-    int num_padawans = rand() % (MAX_PADAWANS - MIN_PADAWANS + 1) + MIN_PADAWANS;
-    int num_espectadores = rand() % (MAX_ESPECTADORES - MIN_ESPECTADORES + 1) + MIN_ESPECTADORES;
+    do {
+    // Gerar valores aleatórios iniciais
+    num_padawans = rand() % (MAX_PADAWANS - MIN_PADAWANS + 1) + MIN_PADAWANS;
+    num_espectadores = rand() % (MAX_ESPECTADORES - MIN_ESPECTADORES + 1) + MIN_ESPECTADORES;
+    system("clear"); //limpa tela
 
+    //Menu
     printf("Uma nova avaliação JEDI se inicia!!!\n");
     printf("Quantidade de Padawans: %d\n", num_padawans);
     printf("Quantidade de Espectadores: %d\n", num_espectadores);
+
+    // Opções do usuário
+    printf("\n---- Escolha uma opção ----\n");
+    printf("[C] - Dar início à cerimônia\n");
+    printf("[R] - Randomizar novamente os valores\n");
+    printf("[M] - Inserir valores manualmente\n");
+    printf("[X] - Sair do programa\n");
+    printf("> ");
+    scanf(" %c", &escolha); // Lê a escolha do usuário
+    escolha = toupper(escolha);
+    switch (escolha) {
+        case 'R': // Randomizar novamente
+            printf("Randomizando novamente...\n");
+            break;
+
+        case 'M': // Inserir valores manualmente
+            printf("Insira a quantidade de Padawans (mínimo %d, máximo %d): ", MIN_PADAWANS, MAX_PADAWANS);
+            scanf("%d", &num_padawans);
+            while (num_padawans < MIN_PADAWANS || num_padawans > MAX_PADAWANS) {
+                printf("Valor inválido. Tente novamente: ");
+                scanf("%d", &num_padawans);
+            }
+
+            printf("Insira a quantidade de Espectadores (mínimo %d, máximo %d): ", MIN_ESPECTADORES, MAX_ESPECTADORES);
+            scanf("%d", &num_espectadores);
+            while (num_espectadores < MIN_ESPECTADORES || num_espectadores > MAX_ESPECTADORES) {
+                printf("Valor inválido. Tente novamente: ");
+                scanf("%d", &num_espectadores);
+            }
+
+            printf("Valores atualizados manualmente.\n");
+            break;
+
+        case 'C': // Dar início à cerimônia
+            printf("Dando início à cerimônia...\n");
+            break;
+
+        case 'X': // Sair do programa
+            printf("Saindo do programa. Que a força esteja com você!\n");
+            exit(EXIT_SUCCESS);
+            break;
+
+        default:
+            printf("Opção inválida. Tente novamente.\n");
+            break;
+    }
+    } while (escolha != 'C');
 
     // Inicializa semáforos com os limites definidos
     inicializa_semaforos(num_espectadores, num_padawans); // Máximo de espectadores e acesso de um Padawan por vez

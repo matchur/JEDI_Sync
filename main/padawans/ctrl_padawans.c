@@ -1,5 +1,5 @@
 #include "ctrl_padawans.h"
-
+#include <unistd.h>
 // Semáforos compartilhados para controle
 extern sem_t tranca_salao;
 extern sem_t capacidade_testes;

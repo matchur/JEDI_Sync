@@ -109,7 +109,7 @@ int main() {
     int num_padawans = rand() % (MAX_PADAWANS - MIN_PADAWANS + 1) + MIN_PADAWANS;
     int num_espectadores = rand() % (MAX_ESPECTADORES - MIN_ESPECTADORES + 1) + MIN_ESPECTADORES;
 
-    printf("Mestre Yoda inicia a avaliação Jedi!\n");
+    printf("Uma nova avaliação JEDI se inicia!!!\n");
     printf("Quantidade de Padawans: %d\n", num_padawans);
     printf("Quantidade de Espectadores: %d\n", num_espectadores);
 

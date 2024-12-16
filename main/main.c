@@ -133,6 +133,7 @@ int main() {
         usleep(rand() % 500000); // Simula chegada aleatória
     }
 
+    /*
     // Cria threads para os Espectadores
     for (int i = 0; i < num_espectadores; i++) {
         ThreadData* data = malloc(sizeof(ThreadData));
@@ -140,7 +141,7 @@ int main() {
         strncpy(data->name, get_random_name(), MAX_NAME_LENGTH);
         pthread_create(&espectador_threads[i], NULL, thread_espectador, data);
         usleep(rand() % 500000); // Simula chegada aleatória
-    }
+    }*/
     
     
     // Aguarda a finalização das threads dos Padawans
@@ -150,11 +151,12 @@ int main() {
 
     //fecha_entrada();
     anuncia_resultado();
-
+    
+    /*
     // Aguarda a finalização das threads dos Espectadores
     for (int i = 0; i < num_espectadores; i++) {
         pthread_join(espectador_threads[i], NULL);
-    }
+    }*/
 
     //corta_tranca(); 
 

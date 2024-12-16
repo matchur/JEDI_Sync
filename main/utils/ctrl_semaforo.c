@@ -17,7 +17,7 @@ sem_t corte_tranca;
 sem_t capacidade_testes;
 
 //Mestres Avaliadores
-sem_t mestre_1,mestre_2,mestre_3,mestre_4;// Binário (Ocupado / Não Ocupado)
+sem_t cumprimentar_mestres;// Binário (Ocupado / Não Ocupado)
 
 
 // Função para inicializar os semáforos com valores iniciais
@@ -52,11 +52,8 @@ void inicializa_semaforos(int max_espectadores, int max_padawans) {
     }
 
     // Semáforo para capacidade de testes
-    if (sem_init(&mestre_1, 0, 1) != 0 && 
-        sem_init(&mestre_2, 0, 1) != 0 &&
-        sem_init(&mestre_3, 0, 1) != 0 &&
-        sem_init(&mestre_4, 0, 1) != 0) {
-        perror("Erro ao inicializar semáforos: mestres");
+    if (sem_init(&cumprimentar_mestres, 0, 1) != 0) {
+        perror("Erro ao inicializar semáforos: cumprimentar_mestres");
     }
 
     printf("Semáforos inicializados com sucesso.\n");
@@ -85,12 +82,9 @@ void destroi_semaforos() {
         perror("Erro ao destruir semáforo: capacidade_testes");
     }
 
-    if (sem_destroy(&mestre_1) != 0 &&
-        sem_destroy(&mestre_2) != 0 &&
-        sem_destroy(&mestre_3) != 0 &&
-        sem_destroy(&mestre_4) != 0) 
+    if (sem_destroy(&cumprimentar_mestres) != 0) 
     {
-        perror("Erro ao destruir semáforos: mestres");
+        perror("Erro ao destruir semáforos: cumprimentar_mestres");
     }
 
     printf("Semáforos destruídos com sucesso.\n");

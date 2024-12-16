@@ -8,7 +8,7 @@ extern int tranca_salao;
 extern int count_avaliacao;
 extern sem_t capacidade_padawan; 
 extern sem_t avaliacao_padawan;
-extern sem_t mestre_1,mestre_2,mestre_3,mestre_4;
+extern sem_t cumprimentar_mestres;
 extern sem_t corte_tranca;
 
 void padawan_entra_salao(int id, const char* nome) {
@@ -22,19 +22,17 @@ void padawan_entra_salao(int id, const char* nome) {
 void cumprimenta_mestres_avaliadores(int id,const char* nome) {
     printf("%s - (%d) está indo cumprimentar os Mestres Avaliadores.\n", nome,id);
     // Simula o cumprimento
-    sleep(3);
+      
+    sem_wait(&cumprimentar_mestres); //Talvez mudar essa forma de cumprimento... Exclusão Mutua simulada
     printf("%s - (%d) está cumprimentando o Mestre Avaliador 1.\n", nome, id);
-    sem_wait(&mestre_1);
-    sem_post(&mestre_1);
+    sleep(1);     
     printf("%s - (%d) está cumprimentando o Mestre Avaliador 2.\n", nome, id);
-    sem_wait(&mestre_2);
-    sem_post(&mestre_2);
+    sleep(1); 
     printf("%s - (%d) está cumprimentando o Mestre Avaliador 3.\n", nome, id);
-    sem_wait(&mestre_3);
-    sem_post(&mestre_3);
+    sleep(1); 
     printf("%s - (%d) está cumprimentando o Mestre Avaliador 4.\n", nome, id);
-    sem_wait(&mestre_4);
-    sem_post(&mestre_4);
+    sleep(1); 
+    sem_post(&cumprimentar_mestres);
     printf("%s - (%d) concluiu o cumprimento aos Mestres Avaliadores.\n" , nome,id);
 }
 

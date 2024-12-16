@@ -6,6 +6,7 @@ sem_t tranca_salao;
 sem_t capacidade_espectadores;
 sem_t avaliacao_padawan;
 sem_t corte_tranca;
+sem_t capacidade_testes;
 
 // Função para inicializar os semáforos com valores iniciais
 void inicializa_semaforos(int max_espectadores, int max_padawans) {

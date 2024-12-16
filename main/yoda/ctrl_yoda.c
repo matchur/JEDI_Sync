@@ -3,8 +3,8 @@
 
 
 // Semáforos para gerenciar o salão e os testes
-sem_t tranca_salao;  // Tranca/Destranca o salão
-sem_t capacidade_testes; // Gerencia a capacidade de testes
+extern sem_t tranca_salao;  // Tranca/Destranca o salão
+extern sem_t capacidade_testes; // Gerencia a capacidade de testes
 
 void inicia_testes() {
     printf("Yoda está iniciando os testes no salão.\n");

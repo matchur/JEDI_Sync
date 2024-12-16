@@ -77,22 +77,22 @@ typedef struct {
 // Funções para threads
 void* thread_padawan(void* arg) {
     ThreadData* data = (ThreadData*)arg;
-    entra_salao(data->id, data->name);
+    padawan_entra_salao(data->id, data->name);
     cumprimenta_mestres_avaliadores(data->id, data->name);
     aguarda_avaliacao(data->id, data->name);
     realiza_avaliacao(data->id, data->name);
     aguarda_corte_tranca(data->id, data->name);
     cumprimenta_Yoda(data->id, data->name);
-    sai_salao(data->id, data->name);
+    padawan_sai_salao(data->id, data->name);
     free(data); // Libera memória alocada
     return NULL;
 }
 
 void* thread_espectador(void* arg) {
     ThreadData* data = (ThreadData*)arg;
-    entra_salao(data->id, data->name);
+    spec_entra_salao(data->id, data->name);
     assiste_testes(data->id, data->name);
-    sai_salao(data->id, data->name);
+    spec_sai_salao(data->id, data->name);
     free(data); // Libera memória alocada
     return NULL;
 }

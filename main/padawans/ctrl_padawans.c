@@ -4,7 +4,7 @@
 extern sem_t tranca_salao;
 extern sem_t capacidade_testes;
 
-void entra_salao(int id, const char* nome) {
+void padawan_entra_salao(int id, const char* nome) {
     printf("%s - (%d) está aguardando para entrar no salão.\n", nome,id);
     sem_wait(&tranca_salao); // Aguarda que o salão seja destrancado
     printf("%s - (%d) entrou no salão.\n", nome,id);
@@ -44,7 +44,7 @@ void cumprimenta_Yoda(int id,const char* nome) {
     printf("%s - (%d) concluiu o cumprimento a Yoda.\n", nome,id);
 }
 
-void sai_salao(int id,const char* nome) {
+void padawan_sai_salao(int id,const char* nome) {
     printf("%s - (%d) está saindo do salão.\n", nome,id);
     sem_post(&tranca_salao); // Libera para o próximo Padawan entrar
     printf("%s - (%d) saiu do salão.\n", nome,id);

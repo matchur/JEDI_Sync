@@ -1,4 +1,6 @@
 #include "ctrl_yoda.h"
+#include <unistd.h>
+
 
 // Semáforos para gerenciar o salão e os testes
 sem_t tranca_salao;  // Tranca/Destranca o salão

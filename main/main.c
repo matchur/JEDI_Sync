@@ -5,7 +5,7 @@
 #include <pthread.h>
 #include <unistd.h>
 #include "yoda/ctrl_yoda.h"
-#include "padawans/ctrl_padawan.h"
+#include "padawans/ctrl_padawans.h"
 #include "spec/ctrl_spec.h"
 #include "utils/ctrl_semaforo.h"
 
@@ -114,7 +114,7 @@ int main() {
     printf("Quantidade de Espectadores: %d\n", num_espectadores);
 
     // Inicializa semáforos com os limites definidos
-    inicializa_semaforos(num_espectadores, 1); // Máximo de espectadores e acesso de um Padawan por vez
+    inicializa_semaforos(num_espectadores, num_padawans); // Máximo de espectadores e acesso de um Padawan por vez
 
     // Inicialização de threads
     pthread_t padawan_threads[num_padawans];

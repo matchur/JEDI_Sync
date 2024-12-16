@@ -9,6 +9,8 @@ sem_t corte_tranca;
 
 // Função para inicializar os semáforos com valores iniciais
 void inicializa_semaforos(int max_espectadores, int max_padawans) {
+    //TESTAR ISSO AQUI DEPOIS.....
+    (void)max_padawans;
     // Semáforo para controlar o acesso ao salão (fechado inicialmente)
     if (sem_init(&tranca_salao, 0, 0) != 0) {
         perror("Erro ao inicializar semáforo: tranca_salao");

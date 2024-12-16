@@ -27,13 +27,13 @@ void destroy_spec_resources() {
 void entra_salao(int id,const char *nome) {
     sem_wait(&salao_mutex);
     pessoas_no_salao++;
-    printf("%s - (%d) entrou no salão. Total no salão: %d\n",id, nome, pessoas_no_salao);
+    printf("%s - (%d) entrou no salão. Total no salão: %d\n", nome,id, pessoas_no_salao);
     sem_post(&salao_mutex);
 }
 
 // Função para assistir os testes
 void assiste_testes(int id,const char *nome) {
-    printf("%s - (%d) está assistindo aos testes.\n",id,nome);
+    printf("%s - (%d) está assistindo aos testes.\n",nome,id);
     sem_wait(&teste_semaforo);
     // Simulação de assistir os testes (pode ser um sleep ou operação específica)
 }
@@ -42,7 +42,7 @@ void assiste_testes(int id,const char *nome) {
 void sai_salao(int id,const char *nome) {
     sem_wait(&salao_mutex);
     pessoas_no_salao--;
-    printf("%s - (%d) saiu do salão. Total no salão: %d\n",id, nome, pessoas_no_salao);
+    printf("%s - (%d) saiu do salão. Total no salão: %d\n", nome,id, pessoas_no_salao);
     if (pessoas_no_salao == 0) {
         printf("O salão está vazio.\n");
     }

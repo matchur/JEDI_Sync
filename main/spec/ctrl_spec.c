@@ -10,7 +10,7 @@ static sem_t salao_mutex;
 static sem_t teste_semaforo;
 static int pessoas_no_salao = 0;
 
-// Função para inicializar os recursos
+// Função para inicializar os recursos ------ PRECISA MUDAR ISSO AQUI PARA O CTRL_SEMAFOROS
 void init_spec_resources() {
     sem_init(&salao_mutex, 0, 1); // Mutex para acessar o salão
     sem_init(&teste_semaforo, 0, 0); // Controle dos testes

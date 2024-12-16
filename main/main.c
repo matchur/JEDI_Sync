@@ -156,7 +156,7 @@ int main() {
         pthread_join(espectador_threads[i], NULL);
     }
 
-    corta_tranca(); // Yoda realiza os cortes das tranças dos aprovados
+    //corta_tranca(); 
 
     // Yoda faz um discurso aleatório
     printf("\nYoda: %s\n\n", get_random_speech());

@@ -24,7 +24,7 @@ void fecha_entrada() {
 
 void anuncia_resultado() {
     printf("Yoda está anunciando os resultados dos testes.\n");
-    // Simula o anúncio
+    // Talvez guardar em uma variavel quem passou e quem não passou para depois mostrar...?
     sleep(1); // Pausa para o efeito dramático
     printf("Resultados anunciados com sucesso!\n");
 }

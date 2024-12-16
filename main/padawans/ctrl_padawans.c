@@ -10,6 +10,7 @@ extern sem_t capacidade_padawan;
 extern sem_t avaliacao_padawan;
 extern sem_t cumprimentar_mestres;
 extern sem_t corte_tranca;
+extern sem_t exclusao_mutua;
 
 void padawan_entra_salao(int id, const char* nome) {
 
@@ -38,9 +39,16 @@ void cumprimenta_mestres_avaliadores(int id,const char* nome) {
 
 void aguarda_avaliacao(int id,const char* nome) {
     printf("%s - (%d) está aguardando pela avaliação dos Mestres.\n", nome, id);
-    count_avaliacao++;//TALVEZ COLOCAR UM MUTEX AQUI
-    sem_wait(&avaliacao_padawan);    
-    count_avaliacao--;//TALVEZ COLOCAR UM MUTEX AQUI
+
+    sem_wait(&exclusao_mutua); 
+    count_avaliacao++;
+    sem_post(&exclusao_mutua); 
+
+    sem_wait(&avaliacao_padawan); 
+
+    sem_wait(&exclusao_mutua); 
+    count_avaliacao--;
+    sem_post(&exclusao_mutua); 
     sleep(2);
     printf("%s - (%d) recebeu sinal para iniciar sua avaliação.\n",nome , id);
 }
@@ -48,11 +56,11 @@ void aguarda_avaliacao(int id,const char* nome) {
 void realiza_avaliacao(int id,const char* nome) {
     printf("%s - (%d) está realizando a avaliação.\n",nome, id);
     sleep(1);
-    printf("ZING! Concentração máxima...\n");
+    printf("ZING!\n");
     sleep(1);
-    printf("SWOOSH! Movimentos impressionantes...\n");
+    printf("SWOOSH!\n");
     sleep(1);
-    printf("BZZZZ! Um golpe final de tirar o fôlego!\n");
+    printf("BZZZZ!\n");
     sleep(1);
     printf("%s - (%d) concluiu a avaliação com sucesso.\n",nome, id);
 }

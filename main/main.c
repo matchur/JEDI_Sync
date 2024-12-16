@@ -104,6 +104,14 @@ void* thread_espectador(void* arg) {
     return NULL;
 }
 
+void* thread_Yoda()
+{
+    libera_entrada();
+    inicia_testes(PLACE_PADAWANS);    
+    //anuncia_resultado();
+    return NULL;
+}
+
 // Função principal
 int main() {
     //Variaveis Init
@@ -193,9 +201,11 @@ int main() {
     // Inicialização de threads
     pthread_t padawan_threads[num_padawans];
     pthread_t espectador_threads[num_espectadores];
+    pthread_t yoda_thread;
 
+    //Cria thread Yoda
+    pthread_create(&yoda_thread, NULL, thread_padawan, NULL);
 
-    libera_entrada();
 
     // Cria threads para os Padawans
     for (int i = 0; i < num_padawans; i++) {
@@ -217,8 +227,7 @@ int main() {
     }*/
     
     // Yoda inicia os testes avaliativos
-    if(count_avaliacao >= PLACE_PADAWANS)
-    inicia_testes(PLACE_PADAWANS);
+    
     
     // Aguarda a finalização das threads dos Padawans
     for (int i = 0; i < num_padawans; i++) {
@@ -226,7 +235,7 @@ int main() {
     }
 
     //fecha_entrada();
-    anuncia_resultado();
+
     
     /*
     // Aguarda a finalização das threads dos Espectadores

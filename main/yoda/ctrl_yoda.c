@@ -6,16 +6,18 @@
 extern int tranca_salao;  // Tranca/Destranca o salão
 extern sem_t capacidade_testes; // Gerencia a capacidade de testes
 extern sem_t avaliacao_padawan;
-
-void inicia_testes(int max_padawans) {
-    printf("Yoda sinaliza que avaliações comecem.\n");
-    for(int i=0;i<max_padawans;i++)
-        sem_post(&avaliacao_padawan);
-}
+extern int count_avaliacao;
 
 void libera_entrada() {
     printf("Yoda liberou a entrada para o salão.\n");
     tranca_salao = 1; // abre o salão
+}
+
+void inicia_testes(int max_padawans) {
+    while(count_avaliacao < max_padawans){} //busy waiting
+    printf("Yoda sinaliza que avaliações comecem.\n");
+    for(int i=0;i<max_padawans;i++)
+        sem_post(&avaliacao_padawan);
 }
 
 void fecha_entrada() {
@@ -31,9 +33,9 @@ void anuncia_resultado() {
 }
 
 void corta_tranca() {
-    printf("Yoda está trancando o salão para novos testes.\n");
+    //printf("Yoda está trancando o salão para novos testes.\n");
     //sem_wait(&tranca_salao); // Bloqueia a entrada no salão
-    printf("Salão trancado.\n");
+    //printf("Salão trancado.\n");
 }
 
 void finaliza_testes() {

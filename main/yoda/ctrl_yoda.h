@@ -6,7 +6,7 @@
 #include <stdio.h>
 
 // Funções relacionadas ao controle de Yoda
-void inicia_testes();
+void inicia_testes(int max_padawans);
 void libera_entrada();
 void anuncia_resultado();
 void corta_tranca();

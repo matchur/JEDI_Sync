@@ -10,7 +10,8 @@ int count_avaliacao = 0;
 sem_t capacidade_padawan; 
 sem_t capacidade_espectadores; 
 
-
+//Espera por avaliação
+sem_t exclusao_mutua;
 sem_t avaliacao_padawan; //Binário (0 - Pausado/ n - Começar a avaliação)
 
 sem_t corte_tranca;
@@ -34,6 +35,11 @@ void inicializa_semaforos(int max_espectadores, int max_padawans) {
     // Semáforo para controlar a capacidade máxima de espectadores no salão
     if (sem_init(&capacidade_espectadores, 0, max_espectadores) != 0) {
         perror("Erro ao inicializar semáforo: capacidade_espectadores");
+    }
+
+    // Semáforo para Exclusão Mútua
+    if (sem_init(&exclusao_mutua, 0, 1) != 0) {
+        perror("Erro ao inicializar semáforo: exclusao_mutua");
     }
 
     // Semáforo para sincronizar a avaliação dos Padawans (Começa com 0 para todos os Padawans iniciarem a avaliação Juntos)

@@ -13,7 +13,8 @@ extern sem_t capacidade_espectadores;
 extern sem_t avaliacao_padawan; 
 extern sem_t corte_tranca;
 extern sem_t capacidade_testes;
-extern sem_t mestre_1,mestre_2,mestre_3,mestre_4;
+extern sem_t cumprimentar_mestres;
+extern sem_t exclusao_mutua;
 
 // Inicialização e destruição dos semáforos
 void inicializa_semaforos(int max_espectadores, int max_padawans);

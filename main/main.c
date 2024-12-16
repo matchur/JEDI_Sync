@@ -104,11 +104,13 @@ void* thread_espectador(void* arg) {
     return NULL;
 }
 
-void* thread_Yoda()
-{
+void* thread_Yoda(void* arg) {
     libera_entrada();
-    inicia_testes(PLACE_PADAWANS);    
-    //anuncia_resultado();
+    inicia_testes(PLACE_PADAWANS);
+
+    // [Opcional: resultado da avaliação]
+    // anuncia_resultado();
+
     return NULL;
 }
 
@@ -204,7 +206,7 @@ int main() {
     pthread_t yoda_thread;
 
     //Cria thread Yoda
-    pthread_create(&yoda_thread, NULL, thread_padawan, NULL);
+    pthread_create(&yoda_thread, NULL, thread_Yoda, NULL)
 
 
     // Cria threads para os Padawans

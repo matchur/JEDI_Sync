@@ -8,6 +8,11 @@
 //Declaração de Variaveis
 extern int tranca_salao; 
 extern int count_avaliacao;
+extern int count_padawans_dentro; 
+extern int count_padawans_avaliados;
+extern int count_padawans_ajoelhado;
+extern int count_padawans_testados;
+
 extern sem_t capacidade_padawan; 
 extern sem_t capacidade_espectadores; 
 extern sem_t avaliacao_padawan; 

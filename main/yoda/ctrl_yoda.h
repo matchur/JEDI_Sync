@@ -12,5 +12,6 @@ void anuncia_resultado();
 void corta_tranca();
 void finaliza_testes();
 void fecha_entrada();
+void guarda_sabre()
 
 #endif // CTRL_YODA_H

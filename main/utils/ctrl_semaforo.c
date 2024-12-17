@@ -5,6 +5,10 @@
 int tranca_salao; //Binário (1 - Aberto / 0 - Fechado)
 int count_avaliacao = 0;
 
+int count_padawans_dentro = 0; //contagem de padawans que entraram
+int count_padawans_testados = 0; //contagem de padawans que terminaram a avaliação_1
+int count_padawans_ajoelhado = 0; //contagem de padawans que esperam cortar a trança
+int count_padawans_avaliados = 0; //contagem de padawans que já fizeram a avaliação e sairam do salao 
 //Declaração dos semáforos globais
 //Capacidade de cada integrante dentro do salão
 sem_t capacidade_padawan; 
@@ -48,7 +52,7 @@ void inicializa_semaforos(int max_espectadores, int max_padawans) {
     }
 
     // Semáforo para sincronizar o corte da trança
-    if (sem_init(&corte_tranca, 0, 1) != 0) {
+    if (sem_init(&corte_tranca, 0, 0) != 0) {
         perror("Erro ao inicializar semáforo: corte_tranca");
     }
 

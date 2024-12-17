@@ -24,6 +24,8 @@
 #define MAX_DISCOURSE_LENGTH 500
 
 extern int count_avaliacao;
+extern int count_padawans_avaliados;
+extern int tranca_salao;
 
 // Lista dinâmica de nomes e discursos
 char** name_list = NULL;
@@ -75,11 +77,16 @@ const char* get_random_speech() {
     return speak_list[rand() % speak_count];
 }
 
-// Estrutura de dados para threads
+// Estrutura de dados para Padawan e Espectador
 typedef struct {
     int id;
     char name[MAX_NAME_LENGTH];
 } ThreadData;
+
+// Estrutura de dados para Padawan e Espectador
+typedef struct {
+    int contagem_padawan;
+} YodaInfo;
 
 // Funções para threads
 void* thread_padawan(void* arg) {
@@ -105,11 +112,27 @@ void* thread_espectador(void* arg) {
 }
 
 void* thread_Yoda(void* arg) {
-    libera_entrada();
-    inicia_testes(PLACE_PADAWANS);
+    YodaInfo* data = (YodaInfo*)arg;
+    int fecha_rand;
+    
+    //laço pra ele continuar ativo enquanto tiver padawan pra ser avaliado
+    while(count_padawans_avaliados<data->contagem_padawan) 
+    {
+        //abre o salao
+        libera_entrada();
 
-    // [Opcional: resultado da avaliação]
-    // anuncia_resultado();
+        fecha_rand = rand() % 4 + 3; //intervalo de 3 a 6 segundos 
+        sleep(fecha_rand);
+
+        if(tranca_salao)
+            fecha_entrada()
+
+        inicia_testes(PLACE_PADAWANS);
+        finaliza_testes();
+        corta_tranca();
+        guarda_sabre();
+    }
+    anuncia_resultado()
 
     return NULL;
 }
@@ -206,6 +229,8 @@ int main() {
     pthread_t yoda_thread;
 
     //Cria thread Yoda
+    YodaInfo* y_dados = malloc(sizeof(YodaInfo));
+    y_dados->contagem_padawan = num_padawans;
     pthread_create(&yoda_thread, NULL, thread_Yoda, NULL)
 
 

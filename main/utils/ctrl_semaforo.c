@@ -1,100 +1,98 @@
 #include "ctrl_semaforo.h"
 #include <stdio.h>
 
-//Declaração de Variaveis
-int tranca_salao; //Binário (1 - Aberto / 0 - Fechado)
-int count_avaliacao = 0;
+// --------------------------- Declaração de Variáveis Globais ---------------------------
+// Variáveis para controle do estado do salão e contadores de participantes
+int tranca_salao;              // Binário (1 - Aberto / 0 - Fechado)
+int count_avaliacao;           // Contagem de avaliações em andamento
+int count_padawans_dentro;     // Contagem de Padawans atualmente dentro do salão
+int count_padawans_testados;   // Contagem de Padawans que terminaram a avaliação inicial
+int count_padawans_ajoelhado;  // Contagem de Padawans aguardando para cortar a trança
+int count_padawans_avaliados;  // Contagem de Padawans que concluíram o processo e saíram
 
-int count_padawans_dentro = 0; //contagem de padawans que entraram
-int count_padawans_testados = 0; //contagem de padawans que terminaram a avaliação_1
-int count_padawans_ajoelhado = 0; //contagem de padawans que esperam cortar a trança
-int count_padawans_avaliados = 0; //contagem de padawans que já fizeram a avaliação e sairam do salao 
-//Declaração dos semáforos globais
-//Capacidade de cada integrante dentro do salão
-sem_t capacidade_padawan; 
-sem_t capacidade_espectadores; 
+int count_spec_dentro;         // Contagem de Espectadores que estão dentro do salão
 
-//Espera por avaliação
-sem_t exclusao_mutua;
-sem_t avaliacao_padawan; //Binário (0 - Pausado/ n - Começar a avaliação)
+// --------------------------- Declaração dos Semáforos Globais ---------------------------
+// Controle de capacidade do salão
+sem_t capacidade_padawan;      // Limita o número de Padawans no salão
+sem_t capacidade_espectadores; // Limita o número de espectadores no salão
 
-sem_t corte_tranca;
-sem_t capacidade_testes;
+// Controle de acesso e sincronização
+sem_t exclusao_mutua;          // Garantir acesso exclusivo a seções críticas
+sem_t avaliacao_padawan;       // Sincroniza início da avaliação dos Padawans
+sem_t corte_tranca;            // Sincroniza o corte da trança
+sem_t capacidade_testes;       // Controla a capacidade de testes simultâneos
+sem_t cumprimentar_mestres;    // Sincroniza o cumprimento dos mestres
 
-//Mestres Avaliadores
-sem_t cumprimentar_mestres;// Binário (Ocupado / Não Ocupado)
+// --------------------------- Funções ---------------------------
 
-
-// Função para inicializar os semáforos com valores iniciais
+/**
+ * @brief Inicializa os semáforos utilizados no programa.
+ * 
+ * @param max_espectadores Capacidade máxima de espectadores no salão.
+ * @param max_padawans Capacidade máxima de Padawans no salão.
+ */
 void inicializa_semaforos(int max_espectadores, int max_padawans) {
-
-    // Semáforo para controlar o acesso ao salão (Starta fechado)
+    // Inicialização dos estados iniciais
     tranca_salao = 0;
+    count_avaliacao = 0;
+    count_padawans_dentro = 0;
+    count_padawans_testados = 0;
+    count_padawans_ajoelhado = 0;
+    count_padawans_avaliados = 0;
+    count_spec_dentro = 0;
 
-    // Semáforo para controlar a capacidade máxima de padawans no salão
+    // Inicialização dos semáforos com valores iniciais
     if (sem_init(&capacidade_padawan, 0, max_padawans) != 0) {
-        perror("Erro ao inicializar semáforo: capacidade_padawans");
+        perror("Erro ao inicializar semáforo: capacidade_padawan");
     }
-
-    // Semáforo para controlar a capacidade máxima de espectadores no salão
     if (sem_init(&capacidade_espectadores, 0, max_espectadores) != 0) {
         perror("Erro ao inicializar semáforo: capacidade_espectadores");
     }
-
-    // Semáforo para Exclusão Mútua
     if (sem_init(&exclusao_mutua, 0, 1) != 0) {
         perror("Erro ao inicializar semáforo: exclusao_mutua");
     }
-
-    // Semáforo para sincronizar a avaliação dos Padawans (Começa com 0 para todos os Padawans iniciarem a avaliação Juntos)
-    if (sem_init(&avaliacao_padawan, 0, 0) != 0) {
+    if (sem_init(&avaliacao_padawan, 0, 0) != 0) { // Começa com 0 (aguardando todos os Padawans para iniciar juntos)
         perror("Erro ao inicializar semáforo: avaliacao_padawan");
     }
-
-    // Semáforo para sincronizar o corte da trança
-    if (sem_init(&corte_tranca, 0, 0) != 0) {
+    if (sem_init(&corte_tranca, 0, 0) != 0) { // Começa com 0 (aguardando para o corte de trança)
         perror("Erro ao inicializar semáforo: corte_tranca");
     }
-
-    // Semáforo para capacidade de testes
     if (sem_init(&capacidade_testes, 0, 1) != 0) {
         perror("Erro ao inicializar semáforo: capacidade_testes");
     }
-
-    // Semáforo para capacidade de testes
     if (sem_init(&cumprimentar_mestres, 0, 1) != 0) {
-        perror("Erro ao inicializar semáforos: cumprimentar_mestres");
+        perror("Erro ao inicializar semáforo: cumprimentar_mestres");
     }
 
     printf("Semáforos inicializados com sucesso.\n");
 }
 
-// Função para destruir os semáforos ao final da execução
+/**
+ * @brief Destroi os semáforos após o término da execução do programa.
+ */
 void destroi_semaforos() {
-    // Destroi cada semáforo e verifica erros
+    // Destruir cada semáforo e verificar erros
     if (sem_destroy(&capacidade_padawan) != 0) {
         perror("Erro ao destruir semáforo: capacidade_padawan");
     }
-
     if (sem_destroy(&capacidade_espectadores) != 0) {
         perror("Erro ao destruir semáforo: capacidade_espectadores");
     }
-
+    if (sem_destroy(&exclusao_mutua) != 0) {
+        perror("Erro ao destruir semáforo: exclusao_mutua");
+    }
     if (sem_destroy(&avaliacao_padawan) != 0) {
         perror("Erro ao destruir semáforo: avaliacao_padawan");
     }
-
     if (sem_destroy(&corte_tranca) != 0) {
         perror("Erro ao destruir semáforo: corte_tranca");
     }
-
     if (sem_destroy(&capacidade_testes) != 0) {
         perror("Erro ao destruir semáforo: capacidade_testes");
     }
-
-    if (sem_destroy(&cumprimentar_mestres) != 0) 
-    {
-        perror("Erro ao destruir semáforos: cumprimentar_mestres");
+    if (sem_destroy(&cumprimentar_mestres) != 0) {
+        perror("Erro ao destruir semáforo: cumprimentar_mestres");
     }
 
     printf("Semáforos destruídos com sucesso.\n");

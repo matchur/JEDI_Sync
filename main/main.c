@@ -11,31 +11,31 @@
 #include "utils/ctrl_semaforo.h"
 
 // Constantes
-#define MESTRES_AVALIADORES 4 // Não implementado
+#define MESTRES_AVALIADORES 4 // Placeholder para expansão futura
+#define PLACE_PADAWANS 3
+#define PLACE_SPECS 8
+#define MIN_PADAWANS 3
+#define MAX_PADAWANS 7
+#define MIN_ESPECTADORES 5
+#define MAX_ESPECTADORES 10
+#define MAX_NAME_LENGTH 60
+#define MAX_DISCOURSE_LENGTH 700
 
-#define PLACE_PADAWANS 6
-#define PLACE_SPECS 15
-
-#define MIN_PADAWANS 5
-#define MAX_PADAWANS 10
-#define MIN_ESPECTADORES 10
-#define MAX_ESPECTADORES 20
-#define MAX_NAME_LENGTH 50
-#define MAX_DISCOURSE_LENGTH 500
-
+// Variáveis externas de controle
 extern int count_avaliacao;
+extern int count_padawans_dentro;
 extern int count_padawans_avaliados;
 extern int tranca_salao;
 
-// Lista dinâmica de nomes e discursos
-char** name_list = NULL;
+// Listas dinâmicas de nomes e discursos
+char **name_list = NULL;
 int name_count = 0;
-char** speak_list = NULL;
+char **speak_list = NULL;
 int speak_count = 0;
 
 // Funções para carregar arquivos
-void load_names(const char* filename) {
-    FILE* file = fopen(filename, "r");
+void load_names(const char *filename) {
+    FILE *file = fopen(filename, "r");
     if (!file) {
         perror("Erro ao abrir name_list.txt");
         exit(EXIT_FAILURE);
@@ -44,15 +44,15 @@ void load_names(const char* filename) {
     char line[MAX_NAME_LENGTH];
     while (fgets(line, sizeof(line), file)) {
         line[strcspn(line, "\n")] = '\0'; // Remove o '\n'
-        name_list = realloc(name_list, sizeof(char*) * (name_count + 1));
+        name_list = realloc(name_list, sizeof(char *) * (name_count + 1));
         name_list[name_count] = strdup(line);
         name_count++;
     }
     fclose(file);
 }
 
-void load_speeches(const char* filename) {
-    FILE* file = fopen(filename, "r");
+void load_speeches(const char *filename) {
+    FILE *file = fopen(filename, "r");
     if (!file) {
         perror("Erro ao abrir speak_list.txt");
         exit(EXIT_FAILURE);
@@ -61,7 +61,7 @@ void load_speeches(const char* filename) {
     char line[MAX_DISCOURSE_LENGTH];
     while (fgets(line, sizeof(line), file)) {
         line[strcspn(line, "\n")] = '\0'; // Remove o '\n'
-        speak_list = realloc(speak_list, sizeof(char*) * (speak_count + 1));
+        speak_list = realloc(speak_list, sizeof(char *) * (speak_count + 1));
         speak_list[speak_count] = strdup(line);
         speak_count++;
     }
@@ -69,28 +69,28 @@ void load_speeches(const char* filename) {
 }
 
 // Seletores aleatórios
-const char* get_random_name() {
+const char *get_random_name() {
+    srand(time(NULL));
     return name_list[rand() % name_count];
 }
 
-const char* get_random_speech() {
+const char *get_random_speech() {
     return speak_list[rand() % speak_count];
 }
 
-// Estrutura de dados para Padawan e Espectador
+// Estruturas de dados
 typedef struct {
     int id;
     char name[MAX_NAME_LENGTH];
 } ThreadData;
 
-// Estrutura de dados para Padawan e Espectador
 typedef struct {
     int contagem_padawan;
 } YodaInfo;
 
 // Funções para threads
-void* thread_padawan(void* arg) {
-    ThreadData* data = (ThreadData*)arg;
+void *thread_padawan(void *arg) {
+    ThreadData *data = (ThreadData *)arg;
     padawan_entra_salao(data->id, data->name);
     cumprimenta_mestres_avaliadores(data->id, data->name);
     aguarda_avaliacao(data->id, data->name);
@@ -102,7 +102,24 @@ void* thread_padawan(void* arg) {
     return NULL;
 }
 
-void* thread_espectador(void* arg) {
+void *thread_Yoda(void *arg) {
+    YodaInfo *data = (YodaInfo *)arg;
+    while (count_padawans_avaliados < data->contagem_padawan) {
+        libera_entrada();
+        sleep(rand() % 4 + 6); // Intervalo de 6 a 9 segundos
+        fecha_entrada();
+        inicia_testes();
+        finaliza_testes();
+        corta_tranca();
+        guarda_sabre();
+        aguarda_saida();
+    }
+    anuncia_resultado();
+    printf("\nYoda: %s\n\n", get_random_speech());
+    return NULL;
+}
+
+void *thread_espectador(void* arg) {
     ThreadData* data = (ThreadData*)arg;
     spec_entra_salao(data->id, data->name);
     assiste_testes(data->id, data->name);
@@ -111,178 +128,102 @@ void* thread_espectador(void* arg) {
     return NULL;
 }
 
-void* thread_Yoda(void* arg) {
-    YodaInfo* data = (YodaInfo*)arg;
-    int fecha_rand;
-    
-    //laço pra ele continuar ativo enquanto tiver padawan pra ser avaliado
-    while(count_padawans_avaliados<data->contagem_padawan) 
-    {
-        //abre o salao
-        libera_entrada();
-
-        fecha_rand = rand() % 4 + 3; //intervalo de 3 a 6 segundos 
-        sleep(fecha_rand);
-
-        if(tranca_salao)
-            fecha_entrada()
-
-        inicia_testes(PLACE_PADAWANS);
-        finaliza_testes();
-        corta_tranca();
-        guarda_sabre();
-    }
-    anuncia_resultado()
-
-    return NULL;
-}
-
 // Função principal
 int main() {
-    //Variaveis Init
-    int num_padawans;
-    int num_espectadores;
+    int num_padawans, num_espectadores;
     char escolha;
     
     srand(time(NULL)); // Inicializa o gerador de números aleatórios
 
-
-
     // Carregar arquivos de nomes e discursos
     load_names("utils/name_list.txt");
     load_speeches("utils/speak_list.txt");
-    // Gerar valores aleatórios iniciais
+
     num_padawans = rand() % (MAX_PADAWANS - MIN_PADAWANS + 1) + MIN_PADAWANS;
     num_espectadores = rand() % (MAX_ESPECTADORES - MIN_ESPECTADORES + 1) + MIN_ESPECTADORES;
 
     do {
-    system("clear"); //limpa tela
-
-    //Menu
-    printf("                                                                  \n");
-    printf("     ██╗███████╗██████╗ ██╗    ███████╗██╗   ██╗███╗   ██╗ ██████╗\n");
-    printf("     ██║██╔════╝██╔══██╗██║    ██╔════╝╚██╗ ██╔╝████╗  ██║██╔════╝\n");
-    printf("     ██║█████╗  ██║  ██║██║    ███████╗ ╚████╔╝ ██╔██╗ ██║██║     \n");
-    printf("██   ██║██╔══╝  ██║  ██║██║    ╚════██║  ╚██╔╝  ██║╚██╗██║██║     \n");
-    printf("╚█████╔╝███████╗██████╔╝██║    ███████║   ██║   ██║ ╚████║╚██████╗\n");
-    printf(" ╚════╝ ╚══════╝╚═════╝ ╚═╝    ╚══════╝   ╚═╝   ╚═╝  ╚═══╝ ╚═════╝\n");
-    printf("                                                                  \n");
-    printf("---- Configuração da Cerimônia ----\n");
-    printf("Quantidade de Padawans: %d\n", num_padawans);
-    printf("Quantidade de Espectadores: %d\n", num_espectadores);
-
-    // Opções do usuário
-    printf("\n---- Escolha uma opção ----\n");
-    printf("[C] - Dar início à cerimônia\n");
-    printf("[R] - Randomizar novamente os valores\n");
-    printf("[M] - Inserir valores manualmente\n");
-    printf("[X] - Sair do programa\n");
-    printf("> ");
-    scanf(" %c", &escolha); // Lê a escolha do usuário
-    escolha = toupper(escolha);
-    switch (escolha) {
-        case 'R': // Randomizar novamente
-            printf("Randomizando novamente...\n");
-            num_padawans = rand() % (MAX_PADAWANS - MIN_PADAWANS + 1) + MIN_PADAWANS;
-            num_espectadores = rand() % (MAX_ESPECTADORES - MIN_ESPECTADORES + 1) + MIN_ESPECTADORES;
-            break;
-
-        case 'M': // Inserir valores manualmente
-            printf("Insira a quantidade de Padawans (mínimo %d, máximo %d): ", MIN_PADAWANS, MAX_PADAWANS);
-            scanf("%d", &num_padawans);
-            while (num_padawans < MIN_PADAWANS || num_padawans > MAX_PADAWANS) {
-                printf("Valor inválido. Tente novamente: ");
+        system("clear");
+        printf("                                                                  \n");
+        printf("     ██╗███████╗██████╗ ██╗    ███████╗██╗   ██╗███╗   ██╗ ██████╗\n");
+        printf("     ██║██╔════╝██╔══██╗██║    ██╔════╝╚██╗ ██╔╝████╗  ██║██╔════╝\n");
+        printf("     ██║█████╗  ██║  ██║██║    ███████╗ ╚████╔╝ ██╔██╗ ██║██║     \n");
+        printf("██   ██║██╔══╝  ██║  ██║██║    ╚════██║  ╚██╔╝  ██║╚██╗██║██║     \n");
+        printf("╚█████╔╝███████╗██████╔╝██║    ███████║   ██║   ██║ ╚████║╚██████╗\n");
+        printf(" ╚════╝ ╚══════╝╚═════╝ ╚═╝    ╚══════╝   ╚═╝   ╚═╝  ╚═══╝ ╚═════╝\n");
+        printf("                                                                  \n");
+        printf("---- Configuração da Cerimônia ----\n");
+        printf("Quantidade de Padawans: %d\n", num_padawans);
+        printf("Quantidade de Espectadores: %d\n", num_espectadores);
+        printf("\n---- Escolha uma opção ----\n");
+        printf("[C] - Dar início à cerimônia\n");
+        printf("[R] - Randomizar novamente os valores\n");
+        printf("[M] - Inserir valores manualmente\n");
+        printf("[X] - Sair do programa\n");
+        printf("> ");
+        scanf(" %c", &escolha);
+        escolha = toupper(escolha);
+        switch (escolha) {
+            case 'R':
+                num_padawans = rand() % (MAX_PADAWANS - MIN_PADAWANS + 1) + MIN_PADAWANS;
+                num_espectadores = rand() % (MAX_ESPECTADORES - MIN_ESPECTADORES + 1) + MIN_ESPECTADORES;
+                break;
+            case 'M':
+                printf("Insira a quantidade de Padawans (mínimo %d, máximo %d): ", MIN_PADAWANS, MAX_PADAWANS);
                 scanf("%d", &num_padawans);
-            }
-
-            printf("Insira a quantidade de Espectadores (mínimo %d, máximo %d): ", MIN_ESPECTADORES, MAX_ESPECTADORES);
-            scanf("%d", &num_espectadores);
-            while (num_espectadores < MIN_ESPECTADORES || num_espectadores > MAX_ESPECTADORES) {
-                printf("Valor inválido. Tente novamente: ");
+                printf("Insira a quantidade de Espectadores (mínimo %d, máximo %d): ", MIN_ESPECTADORES, MAX_ESPECTADORES);
                 scanf("%d", &num_espectadores);
-            }
-
-            printf("Valores atualizados manualmente.\n");
-            break;
-
-        case 'C': // Dar início à cerimônia
-            printf("Dando início à cerimônia...\n");
-            break;
-
-        case 'X': // Sair do programa
-            printf("Saindo do programa. Que a força esteja com você!\n");
-            exit(EXIT_SUCCESS);
-            break;
-
-        default:
-            printf("Opção inválida. Tente novamente.\n");
-            break;
-    }
+                break;
+            case 'C':
+                printf("Dando início à cerimônia...\n");
+                break;
+            case 'X':
+                printf("Saindo do programa. Que a força esteja com você!\n");
+                exit(EXIT_SUCCESS);
+            default:
+                printf("Opção inválida. Tente novamente.\n");
+        }
     } while (escolha != 'C');
 
-    // Inicializa semáforos com os limites definidos
-    inicializa_semaforos(PLACE_SPECS, PLACE_PADAWANS); // Máximo de espectadores e acesso de um Padawan por vez
+    inicializa_semaforos(num_espectadores, num_padawans);
 
-    // Inicialização de threads
-    pthread_t padawan_threads[num_padawans];
-    pthread_t espectador_threads[num_espectadores];
     pthread_t yoda_thread;
+    pthread_t espectador_threads[num_espectadores];
+    pthread_t padawan_threads[num_padawans];
 
-    //Cria thread Yoda
-    YodaInfo* y_dados = malloc(sizeof(YodaInfo));
+    YodaInfo *y_dados = malloc(sizeof(YodaInfo));
     y_dados->contagem_padawan = num_padawans;
-    pthread_create(&yoda_thread, NULL, thread_Yoda, NULL)
+    pthread_create(&yoda_thread, NULL, thread_Yoda, y_dados);
 
-
-    // Cria threads para os Padawans
     for (int i = 0; i < num_padawans; i++) {
-        ThreadData* data = malloc(sizeof(ThreadData));
+        ThreadData *data = malloc(sizeof(ThreadData));
         data->id = i + 1;
         strncpy(data->name, get_random_name(), MAX_NAME_LENGTH);
         pthread_create(&padawan_threads[i], NULL, thread_padawan, data);
-        usleep(rand() % 500000); // Simula chegada aleatória
+        usleep(rand() % 500000);
     }
 
-    /*
-    // Cria threads para os Espectadores
-    for (int i = 0; i < num_espectadores; i++) {
-        ThreadData* data = malloc(sizeof(ThreadData));
-        data->id = i + 1;
-        strncpy(data->name, get_random_name(), MAX_NAME_LENGTH);
-        pthread_create(&espectador_threads[i], NULL, thread_espectador, data);
-        usleep(rand() % 500000); // Simula chegada aleatória
-    }*/
-    
-    // Yoda inicia os testes avaliativos
-    
-    
-    // Aguarda a finalização das threads dos Padawans
     for (int i = 0; i < num_padawans; i++) {
         pthread_join(padawan_threads[i], NULL);
     }
 
-    //fecha_entrada();
+    pthread_join(yoda_thread, NULL);
 
-    
-    /*
-    // Aguarda a finalização das threads dos Espectadores
+    for (int i = 0; i < num_espectadores; i++) {
+        ThreadData *data = malloc(sizeof(ThreadData));
+        data->id = i + 1;
+        strncpy(data->name, get_random_name(), MAX_NAME_LENGTH);
+        pthread_create(&espectador_threads[i], NULL, thread_espectador, data); 
+        usleep(500000); // Pausa 500ms
+    }
+
     for (int i = 0; i < num_espectadores; i++) {
         pthread_join(espectador_threads[i], NULL);
-    }*/
+    }
 
-    //corta_tranca(); 
-
-    // Yoda faz um discurso aleatório
-    printf("\nYoda: %s\n\n", get_random_speech());
-
-    finaliza_testes(); // Finaliza os testes para esta sessão
-
-    printf("A todos os participantes, Parabéns.\n");
-
-    // Destroi semáforos
+    while(count_padawans_avaliados < num_padawans){}
     destroi_semaforos();
 
-    // Libera listas carregadas
     for (int i = 0; i < name_count; i++) free(name_list[i]);
     free(name_list);
     for (int i = 0; i < speak_count; i++) free(speak_list[i]);

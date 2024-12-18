@@ -1,53 +1,108 @@
 #include "ctrl_yoda.h"
 #include <unistd.h>
+#include <semaphore.h>
+#include <stdio.h>
 
+// Variáveis e semáforos globais para controle do salão e testes
+extern int tranca_salao;                // Controle de abertura/fechamento do salão
+extern sem_t capacidade_testes;         // Gerencia a capacidade de testes
+extern sem_t avaliacao_padawan;         // Controle de avaliação dos padawans
+extern sem_t corte_tranca;              // Controle para cortar a trança
 
-// Semáforos para gerenciar o salão e os testes
-extern int tranca_salao;  // Tranca/Destranca o salão
-extern sem_t capacidade_testes; // Gerencia a capacidade de testes
-extern sem_t avaliacao_padawan;
-extern int count_avaliacao;
-
-extern int count_padawans_dentro; 
-extern int count_padawans_testados; 
-extern int count_padawans_ajoelhado;
+extern sem_t exclusao_mutua;            // Exclusão mútua para variáveis globais
+extern int count_avaliacao;             // Contador de avaliações em andamento
+extern int count_padawans_dentro;       // Contador de padawans no salão
+extern int count_padawans_testados;     // Contador de padawans testados
+extern int count_padawans_ajoelhado;    // Contador de padawans ajoelhados
 
 void libera_entrada() {
     printf("Yoda liberou a entrada para o salão.\n");
-    tranca_salao = 1; // abre o salão
-}
-void fecha_entrada() {
-    printf("Yoda Trancou o salão.\n");
-    tranca_salao = 0; // fecha o salão
+    sem_wait(&exclusao_mutua);
+    tranca_salao = 1; // Abre o salão
+    sem_post(&exclusao_mutua);
 }
 
-void inicia_testes(int max_padawans) {
-    //Sincronização, todos os padawans esperam para iniciar a avaliação juntos e somente com o salão trancado
-    while(count_avaliacao < count_padawans_dentro && !tranca_salao){} //busy waiting 
-    printf("Yoda sinaliza que avaliações comecem.\n");
-    for(int i=0;i<max_padawans;i++)
+void fecha_entrada() {
+    printf("Yoda trancou o salão.\n");
+    sem_wait(&exclusao_mutua);
+    tranca_salao = 0; // Fecha o salão
+    sem_post(&exclusao_mutua);
+}
+
+void inicia_testes() {
+    // Aguarda que todos os padawans estejam prontos para começar
+    sem_wait(&exclusao_mutua);
+    while (count_avaliacao < count_padawans_dentro) {
+        sem_post(&exclusao_mutua);
+        usleep(100); // Evita busy waiting puro
+        sem_wait(&exclusao_mutua);
+    }
+    sem_post(&exclusao_mutua);
+
+    // Libera os padawans para a avaliação
+    for (int i = 0; i < count_padawans_dentro; i++) {
         sem_post(&avaliacao_padawan);
+    }
+    printf("Yoda sinaliza que avaliações comecem.\n");
 }
 
 void finaliza_testes() {
-    while(count_padawans_testados < count_padawans_dentro){} //busy waiting
-    printf("Testes finalizados.\n");
-}
+    printf("Aguardando a conclusão de todos os testes.\n");
 
+    // Aguarda que todos os padawans tenham sido testados
+    sem_wait(&exclusao_mutua);
+    while (count_padawans_testados < count_padawans_dentro) {
+        sem_post(&exclusao_mutua);
+        usleep(100); // Evita busy waiting puro
+        sem_wait(&exclusao_mutua);
+    }
+    sem_post(&exclusao_mutua);
+
+    printf("Todos os testes foram concluídos.\n");
+}
 
 void corta_tranca() {
-    printf("Yoda liga seu sabre de luz, e espera então os avaliados.\n");
-    sem_post(&corta_tranca);
+    printf("Yoda liga seu sabre de luz e se prepara para cortar tranças.\n");
+
+    // Aguarda que todos os padawans estejam ajoelhados
+    sem_wait(&exclusao_mutua);
+    while (count_padawans_ajoelhado < count_padawans_dentro) {
+        sem_post(&exclusao_mutua);
+        usleep(100); // Evita busy waiting puro
+        sem_wait(&exclusao_mutua);
+    }
+    sem_post(&exclusao_mutua);
+
+    // Libera o corte da trança
+    sem_post(&corte_tranca);
 }
 
-void guarda_sabre()
-{
+void guarda_sabre() {
+    printf("Yoda aguarda todos os padawans se levantarem antes de guardar o sabre.\n");
+
+    // Aguarda que todos os padawans tenham se levantado
+    sem_wait(&exclusao_mutua);
+    while (count_padawans_ajoelhado > 0) {
+        sem_post(&exclusao_mutua);
+        usleep(100); // Evita busy waiting puro
+        sem_wait(&exclusao_mutua);
+    }
+    sem_post(&exclusao_mutua);
+
+    // Guarda o sabre de luz
     printf("Yoda desliga seu sabre de luz.\n");
-    wait_post(&corta_tranca);
+    sem_wait(&corte_tranca);
 }
+
 void anuncia_resultado() {
     printf("Yoda está anunciando os resultados dos testes.\n");
-    // Talvez guardar em uma variavel quem passou e quem não passou para depois mostrar...?
-    sleep(1); // Pausa para o efeito dramático
-    printf("Resultados anunciados com sucesso!\n");
+
+    // Simula um atraso para efeito dramático
+    sleep(2);
+}
+
+//Aguarda todos os padawans sairem de dentro do salão
+void aguarda_saida()
+{
+    while(count_padawans_dentro > 0){}
 }

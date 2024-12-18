@@ -203,12 +203,6 @@ int main() {
         usleep(rand() % 500000);
     }
 
-    for (int i = 0; i < num_padawans; i++) {
-        pthread_join(padawan_threads[i], NULL);
-    }
-
-    pthread_join(yoda_thread, NULL);
-
     for (int i = 0; i < num_espectadores; i++) {
         ThreadData *data = malloc(sizeof(ThreadData));
         data->id = i + 1;
@@ -216,6 +210,12 @@ int main() {
         pthread_create(&espectador_threads[i], NULL, thread_espectador, data); 
         usleep(500000); // Pausa 500ms
     }
+
+    pthread_join(yoda_thread, NULL);
+
+    for (int i = 0; i < num_padawans; i++) {
+        pthread_join(padawan_threads[i], NULL);
+    }   
 
     for (int i = 0; i < num_espectadores; i++) {
         pthread_join(espectador_threads[i], NULL);

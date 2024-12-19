@@ -28,7 +28,6 @@ sem_t padawan_ajoelhado;       // Sincroniza Padawans Ajoelhados
 sem_t padawan_espera_avaliacao;
 sem_t padawan_finalizado;
 
-sem_t padawans_prontos;
 sem_t ajoelhados_sem;
 sem_t padawans_levantar;
 sem_t saida_padawans;

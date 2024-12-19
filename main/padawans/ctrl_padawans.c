@@ -20,7 +20,7 @@ extern sem_t exclusao_mutua;
 extern sem_t padawan_ajoelhado;
 extern sem_t padawan_espera_avaliacao;
 extern sem_t padawan_finalizado;
-extern sem_t padawans_prontos;
+
 extern sem_t ajoelhados_sem;
 extern sem_t padawans_levantar;
 extern sem_t saida_padawans;
@@ -82,30 +82,27 @@ void realiza_avaliacao(int id, const char* nome) {
     sleep(1); printf("ZING!\n");
     sleep(1); printf("SWOOSH!\n");
     sleep(1); printf("BZZZZ!\n");
+    sleep(3);
     printf("%s - (%d) concluiu. Seus movimentos serão avaliados pelos Mestres.\n", nome, id);
 
     // Sinaliza que este Padawan concluiu a avaliação
     sem_post(&padawan_finalizado); //semaforo para yoda
-    sem_post(&padawans_prontos); //semaforo para padawans
+
 }
 
 // Função para aguardar o corte da trança
 void aguarda_corte_tranca(int id, const char* nome) {
 // Aguarda até que todos os Padawans tenham concluído os testes
-    for (int i = 0; i < count_padawans_dentro; i++) {
-        sem_wait(&padawans_prontos); // Espera que cada Padawan conclua o teste
-    }
-
-    printf("%s - (%d) se aproxima de Yoda, ajoelha, e espera o resultado de sua avaliação.\n", nome, id);
 
     // Incrementa Padawans ajoelhados
     sem_post(&ajoelhados_sem); // Sinaliza que mais um Padawan está ajoelhado
+    printf("%s - (%d) se aproxima de Yoda, ajoelha, e espera o resultado de sua avaliação.\n", nome, id);
 
     // Aguarda a liberação do semáforo para o corte da trança
     sem_wait(&corte_tranca);
 
     // Simula o resultado do corte da trança
-    sleep(2); printf("...");
+    sleep(2); printf("...\n");
     srand(time(NULL));
     int resultado = rand() % 2; // Determina se a trança será cortada
     sleep(3);

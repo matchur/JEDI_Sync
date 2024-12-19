@@ -18,6 +18,13 @@ extern sem_t avaliacao_padawan;
 extern sem_t cumprimentar_mestres;
 extern sem_t corte_tranca;
 extern sem_t exclusao_mutua;
+extern sem_t padawan_ajoelhado;
+extern sem_t padawan_espera_avaliacao;
+extern sem_t padawan_finalizado;
+extern sem_t padawans_prontos;
+extern sem_t ajoelhados_sem;
+extern sem_t padawans_levantar;
+extern sem_t saida_padawans;
 
 // Função para simular a entrada do Padawan no salão
 void padawan_entra_salao(int id, const char* nome) {
@@ -59,18 +66,11 @@ void cumprimenta_mestres_avaliadores(int id, const char* nome) {
 void aguarda_avaliacao(int id, const char* nome) {
     printf("%s - (%d) está aguardando pela avaliação dos Mestres.\n", nome, id);
 
-    // Incrementa contador de Padawans aguardando avaliação com exclusão mútua
-    sem_wait(&exclusao_mutua);
-    count_avaliacao++;
-    sem_post(&exclusao_mutua);
+    // Sinaliza que este Padawan está pronto para a avaliação
+    sem_post(&padawan_espera_avaliacao);
 
     // Aguarda sinal para iniciar a avaliação
     sem_wait(&avaliacao_padawan);
-
-    // Decrementa contador após iniciar a avaliação
-    sem_wait(&exclusao_mutua);
-    count_avaliacao--;
-    sem_post(&exclusao_mutua);
 
     printf("%s - (%d) recebeu a ordem para iniciar sua avaliação.\n", nome, id);
 }
@@ -83,26 +83,24 @@ void realiza_avaliacao(int id, const char* nome) {
     sleep(1); printf("ZING!\n");
     sleep(1); printf("SWOOSH!\n");
     sleep(1); printf("BZZZZ!\n");
-
-    // Incrementa contador de Padawans testados com exclusão mútua
-    sem_wait(&exclusao_mutua);
-    count_padawans_testados++;
-    sem_post(&exclusao_mutua);
-
     printf("%s - (%d) concluiu. Seus movimentos serão avaliados pelos Mestres.\n", nome, id);
+
+    // Sinaliza que este Padawan concluiu a avaliação
+    sem_post(&padawan_finalizado); //semaforo para yoda
+    sem_post(&padawans_prontos); //semaforo para padawans
 }
 
 // Função para aguardar o corte da trança
 void aguarda_corte_tranca(int id, const char* nome) {
-    // Aguarda até que todos os Padawans tenham concluído os testes
-    while (count_padawans_testados < count_padawans_dentro) {}
+// Aguarda até que todos os Padawans tenham concluído os testes
+    for (int i = 0; i < count_padawans_dentro; i++) {
+        sem_wait(&padawans_prontos); // Espera que cada Padawan conclua o teste
+    }
 
     printf("%s - (%d) se aproxima de Yoda, ajoelha, e espera o resultado de sua avaliação.\n", nome, id);
 
-    // Incrementa contador de Padawans ajoelhados com exclusão mútua
-    sem_wait(&exclusao_mutua);
-    count_padawans_ajoelhado++;
-    sem_post(&exclusao_mutua);
+    // Incrementa Padawans ajoelhados
+    sem_post(&ajoelhados_sem); // Sinaliza que mais um Padawan está ajoelhado
 
     // Aguarda a liberação do semáforo para o corte da trança
     sem_wait(&corte_tranca);
@@ -122,10 +120,8 @@ void aguarda_corte_tranca(int id, const char* nome) {
 
     printf("%s - (%d) se levanta.\n", nome, id);
 
-    // Decrementa contador de Padawans ajoelhados com exclusão mútua
-    sem_wait(&exclusao_mutua);
-    count_padawans_ajoelhado--;
-    sem_post(&exclusao_mutua);
+    // Sinaliza que o Padawan se levantou
+    sem_post(&padawans_levantar);
 }
 
 // Função para simular o cumprimento de Yoda
@@ -147,6 +143,9 @@ void padawan_sai_salao(int id, const char* nome) {
     count_padawans_dentro--;
     count_padawans_avaliados++;
     sem_post(&exclusao_mutua);
+
+    // Sinaliza que o Padawan saiu do salão
+    sem_post(&saida_padawans);
 
     printf("%s - (%d) saiu do salão.\n", nome, id);
 }

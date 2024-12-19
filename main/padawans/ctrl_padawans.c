@@ -46,7 +46,7 @@ void padawan_entra_salao(int id, const char* nome) {
 // Função para simular o cumprimento dos Mestres Avaliadores
 void cumprimenta_mestres_avaliadores(int id, const char* nome) {
     printf("%s - (%d) está indo cumprimentar os Mestres Avaliadores.\n", nome, id);
-
+    sleep(1);
     // Exclusão mútua para simular cumprimento sequencial
     sem_wait(&cumprimentar_mestres);
 
@@ -59,6 +59,7 @@ void cumprimenta_mestres_avaliadores(int id, const char* nome) {
     sem_post(&cumprimentar_mestres);
 
     printf("%s - (%d) concluiu o cumprimento aos Mestres Avaliadores.\n", nome, id);
+    sleep(1);
 }
 
 // Função para simular a espera pela avaliação
@@ -70,8 +71,6 @@ void aguarda_avaliacao(int id, const char* nome) {
 
     // Aguarda sinal para iniciar a avaliação
     sem_wait(&avaliacao_padawan);
-
-    printf("%s - (%d) recebeu a ordem para iniciar sua avaliação.\n", nome, id);
 }
 
 // Função para simular a realização da avaliação
@@ -87,7 +86,7 @@ void realiza_avaliacao(int id, const char* nome) {
 
     // Sinaliza que este Padawan concluiu a avaliação
     sem_post(&padawan_finalizado); //semaforo para yoda
-
+    sleep(1);
 }
 
 // Função para aguardar o corte da trança
@@ -114,10 +113,11 @@ void aguarda_corte_tranca(int id, const char* nome) {
 
     sem_post(&corte_tranca);
 
-    printf("%s - (%d) se levanta.\n", nome, id);
-
+    
     // Sinaliza que o Padawan se levantou
     sem_post(&padawans_levantar);
+    printf("%s - (%d) se levanta.\n", nome, id);
+    sleep(1);
 }
 
 // Função para simular o cumprimento de Yoda
@@ -129,6 +129,7 @@ void cumprimenta_Yoda(int id, const char* nome) {
 
 // Função para simular a saída do Padawan do salão
 void padawan_sai_salao(int id, const char* nome) {
+    sleep(1);
     printf("%s - (%d) está saindo do salão.\n", nome, id);
 
     // Libera lugar no salão
@@ -143,5 +144,5 @@ void padawan_sai_salao(int id, const char* nome) {
     // Sinaliza que o Padawan saiu do salão
     sem_post(&saida_padawans);
 
-    printf("%s - (%d) saiu do salão.\n", nome, id);
+    printf("%s - (%d) saiu do salão.\n", nome, id); 
 }

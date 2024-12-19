@@ -215,6 +215,7 @@ int main() {
         data->id = i + 1;
         strncpy(data->name, get_random_name(i), MAX_NAME_LENGTH);
         pthread_create(&padawan_threads[i], NULL, thread_padawan, data);
+        sleep(1);
     }
 
     for (int i = 0; i < num_espectadores; i++) {
@@ -222,6 +223,7 @@ int main() {
         data->id = i + 1;
         strncpy(data->name, get_random_name(i), MAX_NAME_LENGTH);
         pthread_create(&espectador_threads[i], NULL, thread_espectador, data);  
+        sleep(1);
     }
 
     pthread_join(yoda_thread, NULL);

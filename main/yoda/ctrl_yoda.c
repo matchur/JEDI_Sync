@@ -74,6 +74,7 @@ void corta_tranca() {
 void guarda_sabre() {
     // Aguarda que todos os Padawans tenham se levantado
     for (int i = 0; i < count_padawans_dentro; i++) {
+        printf("%d padawans dentro - count: %d",count_padawans_dentro,i);
         sem_wait(&padawans_levantar); // Espera cada Padawan sinalizar que se levantou
     }
 
@@ -84,8 +85,7 @@ void guarda_sabre() {
 
 void anuncia_resultado() {
     printf("Yoda está anunciando os resultados dos testes.\n");
-
-    // Simula um atraso para efeito dramático
+    //atraso para efeito dramático
     sleep(2);
 }
 

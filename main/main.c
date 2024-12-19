@@ -69,8 +69,8 @@ void load_speeches(const char *filename) {
 }
 
 // Seletores aleatórios
-const char *get_random_name() {
-    srand(time(NULL));
+const char *get_random_name(int i) {
+    srand(time(NULL) * i);
     return name_list[rand() % name_count];
 }
 
@@ -199,7 +199,7 @@ int main() {
         }
     } while (escolha != 'C');
     system("clear");
-    printf("Carregando\n");
+
     inicializa_semaforos(num_espectadores, num_padawans);
 
     pthread_t yoda_thread;
@@ -213,36 +213,16 @@ int main() {
     for (int i = 0; i < num_padawans; i++) {
         ThreadData *data = malloc(sizeof(ThreadData));
         data->id = i + 1;
-        strncpy(data->name, get_random_name(), MAX_NAME_LENGTH);
+        strncpy(data->name, get_random_name(i), MAX_NAME_LENGTH);
         pthread_create(&padawan_threads[i], NULL, thread_padawan, data);
-        sleep(1);
-        system("clear");
-            int pontos = (i % 3) + 1;
-        printf("Carregando");
-        for (int j = 0; j < pontos; j++) {
-            printf(".");
-        }
-        printf("\n");
     }
 
     for (int i = 0; i < num_espectadores; i++) {
         ThreadData *data = malloc(sizeof(ThreadData));
         data->id = i + 1;
-        strncpy(data->name, get_random_name(), MAX_NAME_LENGTH);
-        pthread_create(&espectador_threads[i], NULL, thread_espectador, data); 
-        sleep(1); 
-        system("clear");
-        int pontos = (i % 3) + 1;
-        printf("Carregando");
-        for (int j = 0; j < pontos; j++) {
-            printf(".");
-        }
-        printf("\n");
+        strncpy(data->name, get_random_name(i), MAX_NAME_LENGTH);
+        pthread_create(&espectador_threads[i], NULL, thread_espectador, data);  
     }
-    system("clear");
-    printf("-- Iniciando Cerimônia --");
-    sleep(2);
-    system("clear");
 
     pthread_join(yoda_thread, NULL);
 
@@ -254,7 +234,6 @@ int main() {
         pthread_join(espectador_threads[i], NULL);
     }
 
-    while(count_padawans_avaliados < num_padawans){}
     destroi_semaforos();
 
     for (int i = 0; i < name_count; i++) free(name_list[i]);

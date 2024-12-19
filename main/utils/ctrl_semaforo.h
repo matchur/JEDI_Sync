@@ -26,7 +26,6 @@ extern sem_t padawan_ajoelhado;
 extern sem_t padawan_espera_avaliacao;
 extern sem_t padawan_finalizado;
 
-extern sem_t ajoelhados_sem;
 extern sem_t padawans_levantar;
 extern sem_t saida_padawans;
 

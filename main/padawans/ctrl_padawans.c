@@ -21,7 +21,7 @@ extern sem_t padawan_ajoelhado;
 extern sem_t padawan_espera_avaliacao;
 extern sem_t padawan_finalizado;
 
-extern sem_t ajoelhados_sem;
+
 extern sem_t padawans_levantar;
 extern sem_t saida_padawans;
 
@@ -95,7 +95,7 @@ void aguarda_corte_tranca(int id, const char* nome) {
 // Aguarda até que todos os Padawans tenham concluído os testes
 
     // Incrementa Padawans ajoelhados
-    sem_post(&ajoelhados_sem); // Sinaliza que mais um Padawan está ajoelhado
+    sem_post(&padawan_ajoelhado); // Sinaliza que mais um Padawan está ajoelhado
     printf("%s - (%d) se aproxima de Yoda, ajoelha, e espera o resultado de sua avaliação.\n", nome, id);
 
     // Aguarda a liberação do semáforo para o corte da trança

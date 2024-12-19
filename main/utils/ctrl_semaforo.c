@@ -81,9 +81,6 @@ void inicializa_semaforos(int max_espectadores, int max_padawans) {
     if (sem_init(&padawan_finalizado, 0, 0) != 0) {
         perror("Erro ao inicializar semáforo: padawan_ajoelhado");
     }
-    if (sem_init(&padawans_prontos, 0, 0) != 0) {
-        perror("Erro ao inicializar semáforo: padawans_prontos");
-    }
     if (sem_init(&ajoelhados_sem, 0, 0) != 0) {
         perror("Erro ao inicializar semáforo: ajoelhados_sem");
     }

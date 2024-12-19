@@ -48,7 +48,6 @@ void inicializa_semaforos(int max_espectadores, int max_padawans) {
     count_avaliacao = 0;
     count_padawans_dentro = 0;
     count_padawans_testados = 0;
-    count_padawans_ajoelhado = 0;
     count_padawans_avaliados = 0;
     count_spec_dentro = 0;
 

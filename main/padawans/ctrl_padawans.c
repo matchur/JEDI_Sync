@@ -10,7 +10,6 @@ extern int count_avaliacao;
 extern int count_padawans_dentro;
 extern int count_padawans_testados;
 extern int count_padawans_avaliados;
-extern int count_padawans_ajoelhado;
 
 // Declaração de semáforos globais
 extern sem_t capacidade_padawan;

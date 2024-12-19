@@ -169,22 +169,37 @@ int main() {
                 num_espectadores = rand() % (MAX_ESPECTADORES - MIN_ESPECTADORES + 1) + MIN_ESPECTADORES;
                 break;
             case 'M':
-                printf("Insira a quantidade de Padawans (mínimo %d, máximo %d): ", MIN_PADAWANS, MAX_PADAWANS);
-                scanf("%d", &num_padawans);
-                printf("Insira a quantidade de Espectadores (mínimo %d, máximo %d): ", MIN_ESPECTADORES, MAX_ESPECTADORES);
-                scanf("%d", &num_espectadores);
+                do {
+                    printf("Insira a quantidade de Padawans (mínimo %d, máximo %d): ", MIN_PADAWANS, MAX_PADAWANS);
+                    scanf("%d", &num_padawans);
+                    if (num_padawans < MIN_PADAWANS || num_padawans > MAX_PADAWANS) {
+                        printf("Valor inválido! Tente novamente.\n");
+                    }
+                } while (num_padawans < MIN_PADAWANS || num_padawans > MAX_PADAWANS);
+
+                do {
+                    printf("Insira a quantidade de Espectadores (mínimo %d, máximo %d): ", MIN_ESPECTADORES, MAX_ESPECTADORES);
+                    scanf("%d", &num_espectadores);
+                    if (num_espectadores < MIN_ESPECTADORES || num_espectadores > MAX_ESPECTADORES) {
+                        printf("Valor inválido! Tente novamente.\n");
+                    }
+                } while (num_espectadores < MIN_ESPECTADORES || num_espectadores > MAX_ESPECTADORES);
+
                 break;
             case 'C':
                 printf("Dando início à cerimônia...\n");
+                sleep(1);
                 break;
             case 'X':
                 printf("Saindo do programa. Que a força esteja com você!\n");
                 exit(EXIT_SUCCESS);
             default:
                 printf("Opção inválida. Tente novamente.\n");
+                sleep(1);
         }
     } while (escolha != 'C');
-
+    system("clear");
+    printf("Carregando\n");
     inicializa_semaforos(num_espectadores, num_padawans);
 
     pthread_t yoda_thread;
@@ -200,7 +215,14 @@ int main() {
         data->id = i + 1;
         strncpy(data->name, get_random_name(), MAX_NAME_LENGTH);
         pthread_create(&padawan_threads[i], NULL, thread_padawan, data);
-        usleep(rand() % 500000);
+        sleep(1);
+        system("clear");
+            int pontos = (i % 3) + 1;
+        printf("Carregando");
+        for (int j = 0; j < pontos; j++) {
+            printf(".");
+        }
+        printf("\n");
     }
 
     for (int i = 0; i < num_espectadores; i++) {
@@ -208,8 +230,19 @@ int main() {
         data->id = i + 1;
         strncpy(data->name, get_random_name(), MAX_NAME_LENGTH);
         pthread_create(&espectador_threads[i], NULL, thread_espectador, data); 
-        usleep(500000); // Pausa 500ms
+        sleep(1); 
+        system("clear");
+        int pontos = (i % 3) + 1;
+        printf("Carregando");
+        for (int j = 0; j < pontos; j++) {
+            printf(".");
+        }
+        printf("\n");
     }
+    system("clear");
+    printf("-- Iniciando Cerimônia --");
+    sleep(2);
+    system("clear");
 
     pthread_join(yoda_thread, NULL);
 

@@ -1,17 +1,23 @@
+/* ==========================================================================
+ * Descricao: Implementação das funções relacionadas aos Padawans. 
+ *            Inclui as ações de entrada, cumprimento aos Mestres, 
+ *            avaliação, corte de trança, cumprimento a Yoda e saída 
+ *            do salão.
+ * Autor: Matheus Vinicius Costa e Lucas Dos Santos Vaz
+ * Data de criacao: 05/12/2024
+ * Ultima atualizacao: 19/12/2024
+ * ========================================================================== */
+
 #include "ctrl_padawans.h"
 #include <unistd.h>
 #include <stdlib.h>
 #include <time.h>
 #include <stdio.h>
 
-// Declaração de variáveis globais compartilhadas
+// --------------------------- Extern de Variáveis Globais ---------------------------
 extern int tranca_salao;
-extern int count_avaliacao;
 extern int count_padawans_dentro;
-extern int count_padawans_testados;
 extern int count_padawans_avaliados;
-
-// Declaração de semáforos globais
 extern sem_t capacidade_padawan;
 extern sem_t avaliacao_padawan;
 extern sem_t cumprimentar_mestres;
@@ -20,11 +26,11 @@ extern sem_t exclusao_mutua;
 extern sem_t padawan_ajoelhado;
 extern sem_t padawan_espera_avaliacao;
 extern sem_t padawan_finalizado;
-
-
 extern sem_t padawans_levantar;
 extern sem_t saida_padawans;
 
+
+// --------------------------- Funções ---------------------------
 // Função para simular a entrada do Padawan no salão
 void padawan_entra_salao(int id, const char* nome) {
     printf("%s - (%d) está aguardando para entrar no salão.\n", nome, id);

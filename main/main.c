@@ -1,3 +1,11 @@
+/* ==========================================================================
+* Descricao: Programa principal que simula a cerimônia de avaliação dos Padawans
+* e a interação com Yoda e os espectadores, utilizando threads e semaforos.
+*
+* Autor: Matheus Vinicius Costa e Lucas Dos Santos Vaz
+* Data de criacao: 5/12/2024
+* Ultima atualizacao: 19/12/2024
+* ========================================================================== */
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
@@ -10,8 +18,9 @@
 #include "spec/ctrl_spec.h"
 #include "utils/ctrl_semaforo.h"
 
-// Constantes
-#define MESTRES_AVALIADORES 4 // Placeholder para expansão futura
+// ----------------------------------  Constantes  ----------------------------------
+
+#define MESTRES_AVALIADORES 4 
 #define PLACE_PADAWANS 3
 #define PLACE_SPECS 8
 #define MIN_PADAWANS 3
@@ -21,8 +30,8 @@
 #define MAX_NAME_LENGTH 60
 #define MAX_DISCOURSE_LENGTH 700
 
-// Variáveis externas de controle
-extern int count_avaliacao;
+// --------------------------- Extern de Variáveis Globais ---------------------------
+
 extern int count_padawans_dentro;
 extern int count_padawans_avaliados;
 extern int tranca_salao;
@@ -33,7 +42,7 @@ int name_count = 0;
 char **speak_list = NULL;
 int speak_count = 0;
 
-// Funções para carregar arquivos
+// --------------------------- Funções Arquivos ---------------------------
 void load_names(const char *filename) {
     FILE *file = fopen(filename, "r");
     if (!file) {
@@ -68,7 +77,7 @@ void load_speeches(const char *filename) {
     fclose(file);
 }
 
-// Seletores aleatórios
+// --------------------------- Funções de Random ---------------------------
 const char *get_random_name(int i) {
     srand(time(NULL) * i);
     return name_list[rand() % name_count];
@@ -78,7 +87,7 @@ const char *get_random_speech() {
     return speak_list[rand() % speak_count];
 }
 
-// Estruturas de dados
+// --------------------------- Estruturas de Dados ---------------------------
 typedef struct {
     int id;
     char name[MAX_NAME_LENGTH];
@@ -88,7 +97,7 @@ typedef struct {
     int contagem_padawan;
 } YodaInfo;
 
-// Funções para threads
+// --------------------------- Funções de Threads ---------------------------
 void *thread_padawan(void *arg) {
     ThreadData *data = (ThreadData *)arg;
     padawan_entra_salao(data->id, data->name);
@@ -128,7 +137,7 @@ void *thread_espectador(void* arg) {
     return NULL;
 }
 
-// Função principal
+// --------------------------- Funções ---------------------------
 int main() {
     int num_padawans, num_espectadores;
     char escolha;

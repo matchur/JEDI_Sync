@@ -1,24 +1,30 @@
+/* ==========================================================================
+* Descricao: Controle das ações de Yoda no gerenciamento do salão e testes
+*
+* Autor: Matheus Vinicius Costa e Lucas Dos Santos Vaz
+* Data de criacao: 5/12/2024
+* Ultima atualizacao: 19/12/2024
+* ========================================================================== */
 #include "ctrl_yoda.h"
 #include <unistd.h>
 #include <semaphore.h>
 #include <stdio.h>
 
-// Variáveis e semáforos globais para controle do salão e testes
+// --------------------------- Extern de Variáveis Globais ---------------------------
 extern int tranca_salao;                // Controle de abertura/fechamento do salão
-extern sem_t capacidade_testes;         // Gerencia a capacidade de testes
-extern sem_t avaliacao_padawan;         // Controle de avaliação dos padawans
-extern sem_t corte_tranca;              // Controle para cortar a trança
-extern sem_t padawan_ajoelhado;
-extern sem_t exclusao_mutua;            // Exclusão mútua para variáveis globais
-extern int count_avaliacao;             // Contador de avaliações em andamento
 extern int count_padawans_dentro;       // Contador de padawans no salão
-extern int count_padawans_testados;     // Contador de padawans testados
 extern int count_padawans_ajoelhado;    // Contador de padawans ajoelhados
+extern sem_t capacidade_testes;         // Gerencia a capacidade de testes, limitando o número de Padawans que podem ser avaliados simultaneamente
+extern sem_t avaliacao_padawan;         // Controle de avaliação dos padawans, sincronizando o início da avaliação de cada Padawan
+extern sem_t corte_tranca;              // Controle para cortar a trança, sincroniza a ação de cortar a trança durante o processo
+extern sem_t padawan_ajoelhado;         // Sincroniza a ação dos Padawans que precisam ajoelhar antes de iniciar a avaliação
+extern sem_t exclusao_mutua;            // Exclusão mútua para variáveis globais, garantindo acesso exclusivo a seções críticas do código
+extern sem_t padawans_levantar;         // Sincroniza a ação de levantar após a avaliação, permitindo que os Padawans saiam da posição de ajoelhado
+extern sem_t padawan_espera_avaliacao;  // Sincroniza a espera dos Padawans até que a avaliação esteja pronta para começar
+extern sem_t padawan_finalizado;        // Sincroniza a conclusão de um Padawan após a avaliação, indicando que ele terminou e pode sair
+extern sem_t saida_padawans;            // Controle da saída dos Padawans do salão após finalizarem o processo, sincronizando a liberação do espaço
 
-extern sem_t padawans_levantar;
-extern sem_t padawan_espera_avaliacao;
-extern sem_t padawan_finalizado;
-extern sem_t saida_padawans;
+// --------------------------- Funções ---------------------------
 
 void libera_entrada() {
     printf("Yoda liberou a entrada para o salão.\n");

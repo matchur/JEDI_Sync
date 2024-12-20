@@ -1,3 +1,11 @@
+/* ==========================================================================
+ * Descricao: Implementação das funções relacionadas aos espectadores. 
+ *            Inclui as ações de entrar no salão,assistir aos testes e sair do salão.
+ *             
+ * Autor: Matheus Vinicius Costa e Lucas Dos Santos Vaz
+ * Data de criacao: 05/12/2024
+ * Ultima atualizacao: 19/12/2024
+ * ========================================================================== */
 #include "ctrl_spec.h"
 #include <stdio.h>
 #include <pthread.h>
@@ -6,11 +14,14 @@
 #include <stdlib.h>
 #include <time.h>
 
-// Variáveis externas para sincronização
-extern int count_spec_dentro;    // Contador de espectadores dentro do salão
-extern int tranca_salao;         // Indica se o salão está trancado (0 = trancado, 1 = aberto)
-extern sem_t capacidade_espectadores; // Semáforo para controlar a capacidade de espectadores no salão
+// --------------------------- Extern de Variáveis Globais ---------------------------
+
+extern int count_spec_dentro;           // Contador de espectadores dentro do salão
+extern int tranca_salao;                // Indica se o salão está trancado (0 = trancado, 1 = aberto)
+extern sem_t capacidade_espectadores;   // Semáforo para controlar a capacidade de espectadores no salão
 extern sem_t exclusao_mutua;
+
+// --------------------------- Funções ---------------------------
 
 // Função para entrar no salão
 void spec_entra_salao(int id, const char *nome) 

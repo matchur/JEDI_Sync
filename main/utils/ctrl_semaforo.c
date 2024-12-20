@@ -18,6 +18,7 @@ int count_padawans_avaliados;  // Contagem de Padawans que concluíram o process
 int count_spec_dentro;         // Contagem de Espectadores que estão dentro do salão
 
 // --------------------------- Declaração dos Semáforos Globais ---------------------------
+
 // Controle de capacidade do salão
 sem_t capacidade_padawan;      // Limita o número de Padawans no salão
 sem_t capacidade_espectadores; // Limita o número de espectadores no salão

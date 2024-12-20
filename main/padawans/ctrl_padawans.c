@@ -15,6 +15,7 @@
 #include <stdio.h>
 
 // --------------------------- Extern de Variáveis Globais ---------------------------
+
 extern int tranca_salao;
 extern int count_padawans_dentro;
 extern int count_padawans_avaliados;
@@ -31,6 +32,7 @@ extern sem_t saida_padawans;
 
 
 // --------------------------- Funções ---------------------------
+
 // Função para simular a entrada do Padawan no salão
 void padawan_entra_salao(int id, const char* nome) {
     printf("%s - (%d) está aguardando para entrar no salão.\n", nome, id);

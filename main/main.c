@@ -43,6 +43,7 @@ char **speak_list = NULL;
 int speak_count = 0;
 
 // --------------------------- Funções Arquivos ---------------------------
+
 void load_names(const char *filename) {
     FILE *file = fopen(filename, "r");
     if (!file) {
@@ -78,6 +79,7 @@ void load_speeches(const char *filename) {
 }
 
 // --------------------------- Funções de Random ---------------------------
+
 const char *get_random_name(int i) {
     srand(time(NULL) * i);
     return name_list[rand() % name_count];
@@ -88,6 +90,7 @@ const char *get_random_speech() {
 }
 
 // --------------------------- Estruturas de Dados ---------------------------
+
 typedef struct {
     int id;
     char name[MAX_NAME_LENGTH];
@@ -98,6 +101,7 @@ typedef struct {
 } YodaInfo;
 
 // --------------------------- Funções de Threads ---------------------------
+
 void *thread_padawan(void *arg) {
     ThreadData *data = (ThreadData *)arg;
     padawan_entra_salao(data->id, data->name);
@@ -138,6 +142,7 @@ void *thread_espectador(void* arg) {
 }
 
 // --------------------------- Funções ---------------------------
+
 int main() {
     int num_padawans, num_espectadores;
     char escolha;

@@ -41,7 +41,7 @@ void spec_entra_salao(int id, const char *nome)
     // Mensagem de entrada
     printf("Espectador %d (%s) sentou.\n", id, nome);
 }
-
+ 
 // Função para assistir aos testes
 void assiste_testes(int id, const char *nome) 
 {   

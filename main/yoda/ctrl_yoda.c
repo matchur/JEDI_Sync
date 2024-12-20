@@ -11,6 +11,7 @@
 #include <stdio.h>
 
 // --------------------------- Extern de Variáveis Globais ---------------------------
+
 extern int tranca_salao;                // Controle de abertura/fechamento do salão
 extern int count_padawans_dentro;       // Contador de padawans no salão
 extern int count_padawans_ajoelhado;    // Contador de padawans ajoelhados

@@ -1,7 +1,0 @@
-{
-    "files.associations": {
-        "ctrl_yoda.h": "c",
-        "ctrl_padawans.h": "c",
-        "time.h": "c"
-    }
-}

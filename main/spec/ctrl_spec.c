@@ -43,7 +43,7 @@ void spec_entra_salao(int id, const char *nome)
 }
  
 // Função para assistir aos testes
-void assiste_testes(int id, const char *nome) 
+void assiste_testes() 
 {   
     srand(time(NULL)); // Inicializa o gerador de números aleatórios para cada thread
     

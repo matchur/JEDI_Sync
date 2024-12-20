@@ -135,7 +135,7 @@ void *thread_Yoda(void *arg) {
 void *thread_espectador(void* arg) {
     ThreadData* data = (ThreadData*)arg;
     spec_entra_salao(data->id, data->name);
-    assiste_testes(data->id, data->name);
+    assiste_testes();
     spec_sai_salao(data->id, data->name);
     free(data); // Libera memória alocada
     return NULL;
